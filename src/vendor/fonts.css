@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Playwrite NZ";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/PlaywriteNZ-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PT Sans Narrow";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/PTSansNarrow-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "PT Sans Narrow";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../vendor/fonts/PTSansNarrow-Bold.ttf") format("truetype");
+}
