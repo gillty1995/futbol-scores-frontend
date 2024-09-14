@@ -31,10 +31,10 @@ function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
     e.preventDefault();
     try {
       await onSubmit({ email, password, name });
-      onClose(); // Close modal only after successful submission
+      onClose();
     } catch (err) {
-      console.error(err); // Log error for debugging
-      setError(err.message || "An error occurred. Please try again."); // Display user-friendly error message
+      console.error(err);
+      setError(err.message || "An error occurred. Please try again.");
     }
   };
 

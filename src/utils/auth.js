@@ -5,6 +5,7 @@ const baseUrl = "http://localhost:3001";
 
 export const registUser = async ({ email, password, name }) => {
   try {
+    console.log("Registering user with data:", { email, password, name });
     const res = await fetch(`${baseUrl}/users`, {
       method: "POST",
       headers: {

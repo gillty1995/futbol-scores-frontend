@@ -1,3 +1,26 @@
 {
-  "users": []
+  "users": [
+    {
+      "id": "7832",
+      "name": "gill",
+      "email": "gooee@mac.com",
+      "password": "asdf1234"
+    },
+    {
+      "id": "5f1b",
+      "email": "gooee@mac.com",
+      "password": "asdf1234"
+    },
+    {
+      "id": "09f0",
+      "name": "gill",
+      "email": "gooee@mac.com",
+      "password": "asdf1234"
+    },
+    {
+      "id": "3098",
+      "email": "gooee@mac.com",
+      "password": "asdf1234"
+    }
+  ]
 }
