@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,16 +23,16 @@
   box-sizing: border-box;
   width: 100%;
   border-radius: 20px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .modal__close {
   position: absolute;
-  top: 20px;
-  right: 28px;
-  background-image: url(../../assets/close-btn.svg);
-  width: 16px;
-  height: 16px;
+  top: -32px;
+  right: -29px;
+  background-image: url("../../../public/assets/icons/black/back.svg");
+  width: 40px;
+  height: 40px;
   border: none;
   background-repeat: no-repeat;
   background-size: contain;
@@ -52,21 +52,19 @@
   width: 95px;
   height: 20px;
   padding-bottom: 24px;
-  font-family: "Cabinet Grotesk";
-  font-weight: 700;
-  font-size: 16px;
+  font-family: "Roboto";
+  font-weight: 900;
+  font-size: 24px;
   line-height: 20px;
 }
 
 .modal__label {
-  max-width: 440px;
-  width: 100%;
-  height: 52px;
-  font-family: "Cabinet Grotesk";
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 20px;
-  padding-bottom: 24px;
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  color: rgba(47, 113, 229, 1);
+  margin: 10px 0 0;
 }
 
 .modal__label:last-of-type {
@@ -76,11 +74,32 @@
 .modal__input {
   display: block;
   border: none;
-  border-bottom: 1px solid rgba(0, 0, 0, 1);
+  border-bottom: 1px solid grey;
   width: 100%;
   padding: 8px 0 0;
   cursor: pointer;
   height: 20px;
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 400;
+  opacity: 50%;
+  color: rgba(0, 0, 0, 1);
+
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.modal__input:focus {
+  color: black;
+  opacity: 100%;
+  outline: none;
+}
+
+.modal__input.filled {
+  color: black;
+  opacity: 100%;
+  background-color: transparent;
 }
 
 .modal__label_type_input {
@@ -88,62 +107,77 @@
 }
 
 .modal__legend {
-  font-family: "Cabinet Grotesk";
+  font-family: "PT Sans Narrow";
   font-weight: 700;
   font-size: 16px;
   line-height: 20px;
   padding: 0 0 12px;
 }
 
-.modal__radio-btns {
-  border: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  max-width: 173px;
-  max-height: 108px;
-  margin: 24px 0 0;
-}
-
-.modal__radio-input {
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  margin: 2px 8px 2px 0;
-  vertical-align: text-bottom;
-}
-
-.modal__label_type_radio {
-  color: rgba(0, 0, 0, 0.5);
-  max-height: 20px;
-  padding-bottom: 8px;
-}
-
-.modal__radio-input:checked {
-  color: red;
-}
-
-.modal__label_type_radio:last-of-type {
-  padding-bottom: 0;
-}
-
 .modal__submit {
-  width: 124px;
-  height: 36px;
-  font-family: Cabinet Grotesk;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 20px;
+  width: 358px;
+  height: 64px;
+  border-radius: 50px;
+  font-family: "Roboto";
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
   color: rgba(255, 255, 255, 1);
-  background: rgba(0, 0, 0, 1);
+  background: rgba(47, 113, 229, 1);
   border: none;
-  border-radius: 4px;
   overflow: hidden;
   text-align: center;
-  margin: 34px 0 0;
+  margin: 0 auto;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .modal__submit:hover {
-  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 70%;
   transition: 0.3s;
+}
+
+.modal__submit:disabled {
+  background-color: grey;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.modal__link {
+  font-family: "Inter";
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 16px;
+  color: rgba(47, 113, 229, 1);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+.modal__link:hover {
+  opacity: 0.7;
+  transition: 0.3s;
+}
+
+.modal__or {
+  font-family: "Inter";
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 16px;
+  margin: 0;
+  padding: 0 5px 0 0;
+}
+
+.modal__alternate-action {
+  display: flex;
+  justify-content: center;
+}
+
+.modal__error {
+  font-family: inherit;
+  color: rgba(255, 0, 0, 1);
+  font-size: 12px;
 }

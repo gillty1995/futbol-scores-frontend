@@ -8,6 +8,7 @@ function ModalWithForm({
   onClose,
   onSubmit,
   isFormValid,
+  extraAction,
 }) {
   return (
     <div className={`modal ${isOpen && "modal_opened"}`}>
@@ -28,6 +29,7 @@ function ModalWithForm({
             {buttonText}
           </button>
         </form>
+        <div className="modal__footer">{extraAction}</div>
       </div>
     </div>
   );

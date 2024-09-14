@@ -14,8 +14,8 @@ function LoginModal({
     password: "",
   });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -25,16 +25,16 @@ function LoginModal({
     setIsFormValid(isValid);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
     // Handle form submission logic here
     console.log("Form submitted", formData);
     onSubmit(formData);
   };
 
   const handleSignUpClick = () => {
-    openRegisterModal(); // Open the register modal
-    onClose(); // Close the login modal
+    openRegisterModal();
+    onClose();
   };
 
   return (

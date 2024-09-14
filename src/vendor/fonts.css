@@ -21,3 +21,35 @@
   font-display: swap;
   src: url("../vendor/fonts/PTSansNarrow-Bold.ttf") format("truetype");
 }
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/Inter_18pt-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: light;
+  font-weight: 300;
+  font-display: swap;
+  src: url("../vendor/fonts/Inter_18pt-Light.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: bold;
+  font-weight: 900;
+  font-display: swap;
+  src: url("../vendor/fonts/Roboto-Black.ttf");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: medium;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../vendor/fonts/Roboto-Medium.ttf");
+}

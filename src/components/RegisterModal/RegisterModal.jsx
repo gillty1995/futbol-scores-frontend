@@ -1,32 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import "./RegisterModal.css";
 
-function RegisterModal({ isOpen, onClose, onSubmit, isFormValid }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
+function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [error, setError] = useState("");
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    // Add validation logic here
-    // For example, check if passwords match and set isFormValid accordingly
-    const isValid =
-      formData.password === formData.confirmPassword && formData.email;
-    setIsFormValid(isValid);
+  useEffect(() => {
+    if (isOpen) {
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+      setName("");
+      setError("");
+    }
+  }, [isOpen]);
+
+  // Form validation based on the fields
+  const isFormValid =
+    email &&
+    password &&
+    confirmPassword &&
+    name &&
+    password === confirmPassword;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await onSubmit({ email, password, name });
+      onClose(); // Close modal only after successful submission
+    } catch (err) {
+      console.error(err); // Log error for debugging
+      setError(err.message || "An error occurred. Please try again."); // Display user-friendly error message
+    }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission logic here
-    console.log("Form submitted", formData);
-    onSubmit(formData);
+  const handleOpenLoginModal = () => {
+    openLoginModal();
+    onClose();
   };
 
   return (
@@ -37,39 +51,56 @@ function RegisterModal({ isOpen, onClose, onSubmit, isFormValid }) {
       onClose={onClose}
       onSubmit={handleSubmit}
       isFormValid={isFormValid}
+      extraAction={
+        <div className="modal__alternate-action">
+          <p className="modal__or">or</p>
+          <button className="modal__link" onClick={handleOpenLoginModal}>
+            Sign In
+          </button>
+        </div>
+      }
     >
+      <p className="modal__label">Email</p>
       <input
-        type="name"
-        name="name"
-        placeholder="First name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-      />
-      <input
+        className={`modal__input ${email ? "filled" : ""}`}
         type="email"
         name="email"
-        placeholder="Email"
-        value={formData.email}
-        onChange={handleChange}
+        placeholder="Enter email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         required
       />
+      <p className="modal__label">Password</p>
       <input
+        className={`modal__input ${password ? "filled" : ""}`}
         type="password"
         name="password"
         placeholder="Password"
-        value={formData.password}
-        onChange={handleChange}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
         required
       />
+      <p className="modal__label">Confirm password</p>
       <input
+        className={`modal__input ${confirmPassword ? "filled" : ""}`}
         type="password"
         name="confirmPassword"
         placeholder="Confirm Password"
-        value={formData.confirmPassword}
-        onChange={handleChange}
+        value={confirmPassword}
+        onChange={(e) => setConfirmPassword(e.target.value)}
         required
       />
+      <p className="modal__label">Username</p>
+      <input
+        className={`modal__input ${name ? "filled" : ""}`}
+        type="text"
+        name="name"
+        placeholder="Username"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        required
+      />
+      {error && <span className="modal__error">{error}</span>}
     </ModalWithForm>
   );
 }

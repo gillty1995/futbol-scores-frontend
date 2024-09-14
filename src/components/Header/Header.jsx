@@ -1,6 +1,5 @@
 import React from "react";
-import { Link, NavLink } from "react-router-dom";
-
+import { NavLink } from "react-router-dom";
 import "./Header.css";
 
 function Header({ isLoggedIn, currentUser, onLogout, openLoginModal }) {
@@ -11,17 +10,23 @@ function Header({ isLoggedIn, currentUser, onLogout, openLoginModal }) {
         <div className="header__homepage-btn">
           <NavLink
             to="/"
-            className="header__link"
-            activeClassName="header__link_active"
+            className={({ isActive }) =>
+              isActive ? "header__link header__link_active" : "header__link"
+            }
           >
             Home
           </NavLink>
         </div>
         {isLoggedIn ? (
           <>
-            <Link to="/profile" className="header__link">
+            <NavLink
+              to="/profile"
+              className={({ isActive }) =>
+                isActive ? "header__link header__link_active" : "header__link"
+              }
+            >
               Saved Games
-            </Link>
+            </NavLink>
             <div className="header__signout">
               <button onClick={onLogout} className="header__link">
                 Log out ({currentUser?.name || "User"})
