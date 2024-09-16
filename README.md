@@ -1,8 +1,37 @@
-# React + Vite
+**Overview**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- Links
+- Mock Back-end
+- Intro
+- Technologies
+- Techniques
+- Video
+- Final Thoughts
 
-Currently, two official plugins are available:
+**Links**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Link to live site: To be added...
+
+**Mock Back-end**
+
+This project uses `json-server` to mock a REST API. To start the backend, run the following command: npm run start:backend
+
+**Intro**
+
+To be added...
+
+**Technologies**
+
+To be added...
+
+**Techniques**
+
+To be added...
+
+**Video**
+
+Video demonstration of project: To be added...
+
+**Final Thoughts**
+
+To be added...

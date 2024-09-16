@@ -1,26 +1,28 @@
 {
   "users": [
     {
-      "id": "7832",
-      "name": "gill",
+      "id": "7542",
+      "name": "Sniffer",
       "email": "gooee@mac.com",
-      "password": "asdf1234"
+      "password": "sniffer95"
     },
     {
-      "id": "5f1b",
-      "email": "gooee@mac.com",
-      "password": "asdf1234"
+      "id": "3d2b",
+      "name": "Arthur",
+      "email": "gihwork@icloud.com",
+      "password": "arthur19"
     },
     {
-      "id": "09f0",
-      "name": "gill",
-      "email": "gooee@mac.com",
-      "password": "asdf1234"
+      "id": "e8a8",
+      "name": "Test3",
+      "email": "example@test.com",
+      "password": "test"
     },
     {
-      "id": "3098",
-      "email": "gooee@mac.com",
-      "password": "asdf1234"
+      "id": "7607",
+      "name": "Gill",
+      "email": "gooooeee@maccom",
+      "password": "test"
     }
   ]
 }

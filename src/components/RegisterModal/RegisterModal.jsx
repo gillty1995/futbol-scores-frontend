@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import useFormState from "../../hooks/formState";
 import "./RegisterModal.css";
 
 function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState("");
+  const { formData, error, setError, handleChange, resetForm } = useFormState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    name: "",
+  });
+
+  const { email, password, confirmPassword, name } = formData;
 
   useEffect(() => {
     if (isOpen) {
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setName("");
-      setError("");
+      resetForm();
     }
   }, [isOpen]);
 
-  // Form validation based on the fields
   const isFormValid =
     email &&
     password &&
@@ -67,7 +66,7 @@ function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
         name="email"
         placeholder="Enter email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={handleChange}
         required
       />
       <p className="modal__label">Password</p>
@@ -77,7 +76,7 @@ function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
         name="password"
         placeholder="Password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={handleChange}
         required
       />
       <p className="modal__label">Confirm password</p>
@@ -87,7 +86,7 @@ function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
         name="confirmPassword"
         placeholder="Confirm Password"
         value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        onChange={handleChange}
         required
       />
       <p className="modal__label">Username</p>
@@ -97,7 +96,7 @@ function RegisterModal({ isOpen, onClose, onSubmit, openLoginModal }) {
         name="name"
         placeholder="Username"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={handleChange}
         required
       />
       {error && <span className="modal__error">{error}</span>}

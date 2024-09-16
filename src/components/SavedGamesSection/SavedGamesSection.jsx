@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Profile() {
+function SavedGamesSection() {
   // Example state for saved games
   const [savedGames, setSavedGames] = useState([]);
 
@@ -16,7 +16,6 @@ function Profile() {
 
   return (
     <div>
-      <h1>User Profile</h1>
       <h2>Saved Games</h2>
       {savedGames.length === 0 ? (
         <p>No games saved yet.</p>
@@ -38,4 +37,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default SavedGamesSection;
