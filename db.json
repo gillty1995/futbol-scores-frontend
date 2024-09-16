@@ -1,28 +1,3 @@
 {
-  "users": [
-    {
-      "id": "7542",
-      "name": "Sniffer",
-      "email": "gooee@mac.com",
-      "password": "sniffer95"
-    },
-    {
-      "id": "3d2b",
-      "name": "Arthur",
-      "email": "gihwork@icloud.com",
-      "password": "arthur19"
-    },
-    {
-      "id": "e8a8",
-      "name": "Test3",
-      "email": "example@test.com",
-      "password": "test"
-    },
-    {
-      "id": "7607",
-      "name": "Gill",
-      "email": "gooooeee@maccom",
-      "password": "test"
-    }
-  ]
+  "users": []
 }
