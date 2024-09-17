@@ -16,6 +16,7 @@
   line-height: 24px;
   color: rgba(255, 255, 255, 1);
   font-family: "Playwrite NZ";
+  z-index: 4;
 }
 
 .header__nav {
@@ -24,6 +25,7 @@
   align-items: center;
   margin: 0;
   padding: 0;
+  z-index: 4;
 }
 
 .header__link {

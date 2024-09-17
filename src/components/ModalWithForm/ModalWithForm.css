@@ -9,6 +9,7 @@
   justify-content: center;
   align-items: center;
   visibility: hidden;
+  z-index: 10;
 }
 
 .modal_opened {
@@ -86,7 +87,6 @@
   font-weight: 400;
   opacity: 50%;
   color: rgba(0, 0, 0, 1);
-
   transition: color 0.3s ease, opacity 0.3s ease;
 }
 

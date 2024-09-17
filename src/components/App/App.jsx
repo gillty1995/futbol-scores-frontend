@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import AuthContext from "../../contexts/AuthContext";
 import { loginUser, registUser, checkToken } from "../../utils/auth";
+import axios from "axios";
 
 import Header from "../Header/Header";
 import Main from "../Main/Main";
@@ -22,7 +23,36 @@ function App() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { login, logout } = useContext(AuthContext);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(false); // change to preloader later
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  const handleSearch = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      console.log("Searching for:", searchQuery);
+      const response = await axios.get(
+        `https://api-football-v1.p.rapidapi.com/v3/teams`,
+        {
+          headers: {
+            "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+          },
+          params: { search: searchQuery },
+        }
+      );
+      console.log("Search results:", response.data);
+      setSearchResults(response.data.response);
+    } catch (err) {
+      console.error("Error fetching search results:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -144,7 +174,19 @@ function App() {
             openLoginModal={openLoginModal}
           />
           <Routes>
-            <Route path="/" element={<Main />} />
+            <Route
+              path="/"
+              element={
+                <Main
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  handleSearch={handleSearch}
+                  searchResults={searchResults}
+                  loading={loading}
+                  error={error}
+                />
+              }
+            />
             <Route path="/api-data" element={<ApiData />} />
             <Route path="/saved-games" element={<SavedGamesSection />} />
           </Routes>

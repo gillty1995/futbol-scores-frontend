@@ -7,7 +7,7 @@ function Header({ isLoggedIn, currentUser, onLogout, openLoginModal }) {
   console.log("Current User:", currentUser);
   return (
     <header className="header">
-      <p className="header__logo">FutbolScores</p>
+      <h1 className="header__logo">FutbolScores</h1>
       <nav className="header__nav">
         <div className="header__homepage-btn">
           <NavLink

@@ -43,7 +43,7 @@
   font-style: bold;
   font-weight: 900;
   font-display: swap;
-  src: url("../vendor/fonts/Roboto-Black.ttf");
+  src: url("../vendor/fonts/Roboto-Black.ttf") format(truetype);
 }
 
 @font-face {
@@ -51,5 +51,13 @@
   font-style: medium;
   font-weight: 500;
   font-display: swap;
-  src: url("../vendor/fonts/Roboto-Medium.ttf");
+  src: url("../vendor/fonts/Roboto-Medium.ttf") format(truetype);
+}
+
+@font-face {
+  font-family: "Roboto Slab";
+  font-style: regular;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../vendor/fonts/RobotoSlab-Regular.ttf") format(truetype);
 }
