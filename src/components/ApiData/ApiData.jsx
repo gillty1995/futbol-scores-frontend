@@ -8,17 +8,18 @@ function ApiData() {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("API Key:", import.meta.env.VITE_API_KEY);
       try {
         const response = await axios.get(
           "https://api-football-v1.p.rapidapi.com/v3/fixtures",
           {
             headers: {
-              "X-RapidAPI-Key": process.env.REACT_APP_API_KEY,
+              "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
               "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
             },
           }
         );
-        console.log("Data fetched:", response.data); // Log the fetched data
+        console.log("Data fetched:", response.data); // Log fetched data
         setData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error); // Log any errors
@@ -38,7 +39,7 @@ function ApiData() {
     <div>
       <h1>Football Matches</h1>
       <ul>
-        {data?.response.map((match) => (
+        {data?.response?.map((match) => (
           <li key={match.fixture.id}>
             {match.fixture.date} - {match.teams.home.name} vs{" "}
             {match.teams.away.name}

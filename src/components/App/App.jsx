@@ -12,6 +12,7 @@ import SavedGamesSection from "../SavedGamesSection/SavedGamesSection";
 import Footer from "../Footer/Footer";
 import LoginModal from "../LoginModal/LoginModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
+import GamesSection from "../GamesSection/GamesSection";
 
 import "./App.css";
 
@@ -189,6 +190,7 @@ function App() {
             />
             <Route path="/api-data" element={<ApiData />} />
             <Route path="/saved-games" element={<SavedGamesSection />} />
+            <Route path="/team/:teamId" element={<GamesSection />} />
           </Routes>
           <Footer />
         </div>

@@ -93,3 +93,9 @@
   font-size: 20px;
   z-index: 10;
 }
+
+.main__error {
+  color: red;
+  margin-top: 10px;
+  z-index: 15;
+}

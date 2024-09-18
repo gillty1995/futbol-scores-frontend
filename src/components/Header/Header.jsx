@@ -4,7 +4,7 @@ import logoutIcon from "../../../public/assets/icons/logout.svg";
 import "./Header.css";
 
 function Header({ isLoggedIn, currentUser, onLogout, openLoginModal }) {
-  console.log("Current User:", currentUser);
+  // console.log("Current User:", currentUser);
   return (
     <header className="header">
       <h1 className="header__logo">FutbolScores</h1>

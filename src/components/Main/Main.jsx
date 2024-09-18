@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom"; // Import Link from React Router
 import "./Main.css";
 
 function Main({
@@ -9,6 +10,17 @@ function Main({
   loading,
   error,
 }) {
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSearchClick = () => {
+    if (!searchQuery.trim()) {
+      setErrorMessage("Please enter a search term.");
+    } else {
+      setErrorMessage("");
+      handleSearch(); // Call the actual search function if input is valid
+    }
+  };
+
   return (
     <main className="main">
       <h2 className="main__header">What's the score?</h2>
@@ -24,16 +36,24 @@ function Main({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button onClick={handleSearch} className="main__search-btn">
+        <button
+          onClick={handleSearchClick} // Use handleSearchClick instead of handleSearch
+          className="main__search-btn"
+        >
           Search
         </button>
       </div>
+      {errorMessage && <p className="main__error">{errorMessage}</p>}{" "}
+      {/* Display error message */}
       <div className="main__preloader main__preloader_error">
         {loading && <p>Loading...</p>}
         {error && <p>Error: {error.message}</p>}
         <ul>
           {searchResults.map((team) => (
-            <li key={team.team.id}>{team.team.name}</li>
+            <li key={team.team.id}>
+              {/* Wrap the team name in a Link that navigates to /team/:id */}
+              <Link to={`/team/${team.team.id}`}>{team.team.name}</Link>
+            </li>
           ))}
         </ul>
       </div>
