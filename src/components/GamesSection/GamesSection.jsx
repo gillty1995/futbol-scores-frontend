@@ -140,9 +140,23 @@ function GamesSection() {
               </span>
             </div>
             <div className="gamessection__teams">
-              <span className="gamessection__team">{game.teams.home.name}</span>
+              <div className="gamessection__team">
+                <img
+                  src={game.teams.home.logo} // Ensure you use the actual logo URL
+                  alt={`${game.teams.home.name} logo`}
+                  className="gamessection__team-logo"
+                />
+                <span>{game.teams.home.name}</span>
+              </div>
               <span className="gamessection__vs">vs</span>
-              <span className="gamessection__team">{game.teams.away.name}</span>
+              <div className="gamessection__team">
+                <img
+                  src={game.teams.away.logo} // Same here for the away team
+                  alt={`${game.teams.away.name} logo`}
+                  className="gamessection__team-logo"
+                />
+                <span>{game.teams.away.name}</span>
+              </div>
             </div>
           </li>
         ))}
