@@ -1,0 +1,87 @@
+.gameslist {
+  background: rgba(245, 246, 247, 1);
+  width: 100%;
+  z-index: 10;
+  padding-bottom: 80px;
+  margin: 0;
+}
+
+.gameslist__header {
+  font-family: "Roboto Slab";
+  font-size: 40px;
+  line-height: 46px;
+  font-weight: 400;
+  color: rgba(26, 27, 34, 1);
+  opacity: 0.9;
+  text-align: center;
+}
+
+.gameslist__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0 40px 0;
+}
+
+.gameslist__link {
+  display: block;
+  padding: 10px;
+  /* background: rgba(245, 246, 247, 1); */
+  background: rgba(230, 232, 235, 0.4);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  color: rgba(26, 27, 34, 3);
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: "Roboto";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.gameslist__link:hover {
+  opacity: 50%;
+  transition: 1s ease;
+}
+
+.gameslist__preloader_error {
+  font-family: inherit;
+  color: rgba(255, 0, 0, 1);
+  font-size: 20px;
+  text-align: center;
+}
+
+.gameslist__error {
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.gameslist__header {
+  visibility: hidden;
+}
+
+.gameslist__show-more {
+  margin: 40px 0 0;
+  width: 288px;
+  height: 64px;
+  border-radius: 50px;
+  border: none;
+  background: rgba(255, 255, 255, 1);
+  font-family: "Roboto";
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  color: rgba(26, 27, 34, 0.9);
+  cursor: pointer;
+}
+
+.gameslist__show-more:hover {
+  background: rgba(232, 232, 232, 1);
+  transition: 1s ease;
+}

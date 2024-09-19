@@ -164,15 +164,21 @@ function App() {
     setIsFormValid(isValid);
   };
 
+  const resetSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
-      <div className="page">
+      <div className="page page__background-image">
         <div className="page__content">
           <Header
             isLoggedIn={isLoggedIn}
             currentUser={currentUser}
             onLogout={handleLogout}
             openLoginModal={openLoginModal}
+            resetSearch={resetSearch}
           />
           <Routes>
             <Route
@@ -185,6 +191,7 @@ function App() {
                   searchResults={searchResults}
                   loading={loading}
                   error={error}
+                  setSearchResults={setSearchResults}
                 />
               }
             />

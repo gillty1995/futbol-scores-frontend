@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link from React Router
+import GamesList from "../GamesList/GamesList";
 import "./Main.css";
 
 function Main({
@@ -9,16 +9,25 @@ function Main({
   searchResults,
   loading,
   error,
+  setSearchResults,
 }) {
   const [errorMessage, setErrorMessage] = useState("");
+  const [searchDisabled, setSearchDisabled] = useState(false);
 
   const handleSearchClick = () => {
     if (!searchQuery.trim()) {
       setErrorMessage("Please enter a search term.");
     } else {
       setErrorMessage("");
-      handleSearch(); // Call the actual search function if input is valid
+      handleSearch();
+      setSearchDisabled(true); // Disable the search button
     }
+  };
+
+  const handleInputClick = () => {
+    setSearchQuery("");
+    setSearchDisabled(false);
+    setSearchResults([]);
   };
 
   return (
@@ -35,28 +44,23 @@ function Main({
           placeholder="Enter football club or country"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          onClick={handleInputClick}
         />
         <button
-          onClick={handleSearchClick} // Use handleSearchClick instead of handleSearch
+          onClick={handleSearchClick}
           className="main__search-btn"
+          disabled={searchDisabled}
         >
           Search
         </button>
       </div>
-      {errorMessage && <p className="main__error">{errorMessage}</p>}{" "}
-      {/* Display error message */}
-      <div className="main__preloader main__preloader_error">
-        {loading && <p>Loading...</p>}
-        {error && <p>Error: {error.message}</p>}
-        <ul>
-          {searchResults.map((team) => (
-            <li key={team.team.id}>
-              {/* Wrap the team name in a Link that navigates to /team/:id */}
-              <Link to={`/team/${team.team.id}`}>{team.team.name}</Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+
+      <GamesList
+        errorMessage={errorMessage}
+        loading={loading}
+        error={error}
+        searchResults={searchResults}
+      />
     </main>
   );
 }

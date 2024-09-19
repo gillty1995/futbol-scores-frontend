@@ -3,8 +3,13 @@ import { NavLink } from "react-router-dom";
 import logoutIcon from "../../../public/assets/icons/logout.svg";
 import "./Header.css";
 
-function Header({ isLoggedIn, currentUser, onLogout, openLoginModal }) {
-  // console.log("Current User:", currentUser);
+function Header({
+  isLoggedIn,
+  currentUser,
+  onLogout,
+  openLoginModal,
+  resetSearch,
+}) {
   return (
     <header className="header">
       <h1 className="header__logo">FutbolScores</h1>
@@ -12,6 +17,7 @@ function Header({ isLoggedIn, currentUser, onLogout, openLoginModal }) {
         <div className="header__homepage-btn">
           <NavLink
             to="/"
+            onClick={resetSearch}
             className={({ isActive }) =>
               isActive ? "header__link header__link_active" : "header__link"
             }

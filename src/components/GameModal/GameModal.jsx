@@ -100,11 +100,7 @@ function GameModal({ game, onClose }) {
       onSubmit={handleSaveGame}
       buttonText="Save Game"
       isFormValid={isFormValid}
-      extraAction={
-        <button type="button" onClick={onClose}>
-          Close
-        </button>
-      }
+      // extraAction={}
     >
       {renderContent()}
     </ModalWithForm>

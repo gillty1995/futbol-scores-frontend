@@ -10,11 +10,14 @@
 .page__content {
   margin: 0 auto;
   width: 100%;
+}
+
+.page__background-image {
   background-image: url("../../../public/assets/vienna-reyes-qCrKTET_09o-unsplash\ \(1\).jpg");
   background-size: cover;
-  background-position: center;
+  background-position: center 100%;
   background-repeat: no-repeat;
-  position: relative;
+  background-attachment: fixed;
 }
 
 .page__content::before {
