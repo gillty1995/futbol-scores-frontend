@@ -2,8 +2,13 @@
   background: rgba(245, 246, 247, 1);
   z-index: 5;
   position: relative;
-  margin: 0;
-  padding: 20px;
+  margin: 0 auto;
+  padding: 25px;
+  min-height: auto;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: none;
+  border: none;
 }
 
 .footer__info {
@@ -18,5 +23,4 @@
 .footer__link {
   text-decoration: none;
   color: inherit;
-  /* font-weight: bold; */
 }

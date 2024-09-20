@@ -177,7 +177,10 @@
 }
 
 .modal__error {
-  font-family: inherit;
+  font-family: "Inter";
   color: rgba(255, 0, 0, 1);
   font-size: 12px;
+  line-height: 14px;
+  padding-top: 10px;
+  font-weight: 400;
 }

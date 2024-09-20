@@ -1,0 +1,24 @@
+{
+  "matches": [
+    {
+      "match_id": 1,
+      "home_team": "Manchester United",
+      "away_team": "Chelsea",
+      "score": {
+        "home": 2,
+        "away": 1
+      },
+      "date": "2024-09-01T15:00:00Z"
+    },
+    {
+      "match_id": 2,
+      "home_team": "Arsenal",
+      "away_team": "Liverpool",
+      "score": {
+        "home": 1,
+        "away": 1
+      },
+      "date": "2024-09-02T18:00:00Z"
+    }
+  ]
+}

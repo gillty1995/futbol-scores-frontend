@@ -20,7 +20,7 @@ function Main({
     } else {
       setErrorMessage("");
       handleSearch();
-      setSearchDisabled(true); // Disable the search button
+      setSearchDisabled(true);
     }
   };
 
