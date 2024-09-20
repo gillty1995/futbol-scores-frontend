@@ -19,10 +19,10 @@ function ApiData() {
             },
           }
         );
-        console.log("Data fetched:", response.data); // Log fetched data
+        console.log("Data fetched:", response.data);
         setData(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error); // Log any errors
+        console.error("Error fetching data:", error);
         setError(error);
       } finally {
         setLoading(false);

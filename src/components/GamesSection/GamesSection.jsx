@@ -47,7 +47,7 @@ function GamesSection() {
     const gameDate = new Date(dateTime);
     return (
       now >= gameDate && now <= new Date(gameDate.getTime() + 120 * 60 * 1000)
-    ); // assuming live games last 2 hours
+    );
   };
 
   const startDate = formatDateForAPI(today);
@@ -132,30 +132,39 @@ function GamesSection() {
             onClick={() => handleCardClick(game)}
           >
             <div className="gamessection__teams-date">
-              <span className="gamessection__date">
-                {formatDate(game.fixture.date)}{" "}
+              <span
+                className={`gamessection__date ${
+                  isLive(game.fixture.date) ? "gamessection__live" : ""
+                }`}
+              >
                 {isLive(game.fixture.date)
-                  ? "Live"
-                  : formatTime(game.fixture.date)}
+                  ? "LIVE"
+                  : `${formatDate(game.fixture.date)} ${formatTime(
+                      game.fixture.date
+                    )}`}
               </span>
             </div>
             <div className="gamessection__teams">
               <div className="gamessection__team">
                 <img
-                  src={game.teams.home.logo} // Ensure you use the actual logo URL
+                  src={game.teams.home.logo}
                   alt={`${game.teams.home.name} logo`}
                   className="gamessection__team-logo"
                 />
-                <span>{game.teams.home.name}</span>
+                <span className="gamessection__teams-name">
+                  {game.teams.home.name}
+                </span>
               </div>
               <span className="gamessection__vs">vs</span>
               <div className="gamessection__team">
                 <img
-                  src={game.teams.away.logo} // Same here for the away team
+                  src={game.teams.away.logo}
                   alt={`${game.teams.away.name} logo`}
                   className="gamessection__team-logo"
                 />
-                <span>{game.teams.away.name}</span>
+                <span className="gamessection__teams-name">
+                  {game.teams.away.name}
+                </span>
               </div>
             </div>
           </li>
