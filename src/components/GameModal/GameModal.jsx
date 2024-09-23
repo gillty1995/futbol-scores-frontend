@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
+import Preloader from "../Preloader/Preloader";
 import "./GameModal.css";
 
 function GameModal({ game, onClose }) {
   const [liveScore, setLiveScore] = useState(null);
   const [isFormValid, setIsFormValid] = useState(true);
   const [isLiveGame, setIsLiveGame] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const checkIfLive = async () => {
       if (game) {
+        setIsLoading(true);
         try {
           const response = await axios.get(
             `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
@@ -26,8 +28,6 @@ function GameModal({ game, onClose }) {
           );
 
           const liveGames = response.data.response;
-          console.log("Live Games Data:", liveGames);
-
           const liveGame = liveGames.find(
             (liveGame) => liveGame.fixture.id === game.fixture.id
           );
@@ -35,13 +35,14 @@ function GameModal({ game, onClose }) {
           if (liveGame) {
             setIsLiveGame(true);
             setLiveScore(liveGame);
-            console.log("Live Game Details:", liveGame);
           } else {
             setIsLiveGame(false);
             setLiveScore(null);
           }
         } catch (error) {
           console.error("Error fetching live games:", error);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -55,8 +56,11 @@ function GameModal({ game, onClose }) {
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return <Preloader className="gamemodal__preloader" />;
+    }
+
     if (isLiveGame && liveScore) {
-      // Adjusting access based on the structure of score data
       const homeScore =
         liveScore.score?.fulltime?.home ??
         liveScore.score?.halftime?.home ??
@@ -67,23 +71,23 @@ function GameModal({ game, onClose }) {
         "N/A";
 
       return (
-        <div>
-          <h3>
+        <div className="gamemodal">
+          <h3 className="gamemodal__teams">
             {game.teams.home.name} vs {game.teams.away.name}
           </h3>
-          <p>Date: {formatDate(game.fixture.date)}</p>
-          <p>
-            Score: {homeScore} - {awayScore}
+          <p className="gamemodal__live-text">LIVE</p>
+          <p className="gamemodal__score">
+            {homeScore} - {awayScore}
           </p>
         </div>
       );
     } else {
       return (
         <div>
-          <h3>
+          <h3 className="gamemodal__teams">
             {game.teams.home.name} vs {game.teams.away.name}
           </h3>
-          <p>
+          <p className="gamemodal__date">
             Date: {formatDate(game.fixture.date)}{" "}
             {formatTime(game.fixture.date)}
           </p>
@@ -100,7 +104,7 @@ function GameModal({ game, onClose }) {
       onSubmit={handleSaveGame}
       buttonText="Save Game"
       isFormValid={isFormValid}
-      // extraAction={}
+      isLoading={isLoading}
     >
       {renderContent()}
     </ModalWithForm>

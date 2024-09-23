@@ -9,6 +9,7 @@ function ModalWithForm({
   onSubmit,
   isFormValid,
   extraAction,
+  isLoading,
 }) {
   return (
     <div className={`modal ${isOpen && "modal_opened"}`}>
@@ -23,7 +24,9 @@ function ModalWithForm({
           {children}
           <button
             type="submit"
-            className="modal__submit"
+            className={`modal__submit ${
+              isLoading ? "modal__submit_hidden" : ""
+            }`}
             disabled={!isFormValid}
           >
             {buttonText}

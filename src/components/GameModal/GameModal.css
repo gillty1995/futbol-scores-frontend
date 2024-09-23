@@ -1,0 +1,58 @@
+.gamemodal__teams {
+  font-family: "Roboto";
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.gamemodal__live-text {
+  color: red;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: blink 2.5s infinite ease-in-out;
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  justify-content: center;
+  display: flex;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.gamemodal__date {
+  display: flex;
+  justify-content: center;
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.gamemodal__score {
+  display: flex;
+  justify-content: center;
+  font-family: "Roboto";
+  font-weight: bold;
+  font-size: 60px;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.gamemodal__preloader {
+  position: absolute;
+}

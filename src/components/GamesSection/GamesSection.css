@@ -3,7 +3,6 @@
   z-index: 10;
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.5);
-  background-color: white;
   padding: 20px;
 }
 
@@ -15,14 +14,16 @@
   color: #ffffff;
   margin-bottom: 20px;
   text-align: center;
+  padding-bottom: 40px;
 }
 
 .gamessection__card-list {
   list-style: none;
-  padding: 0;
+  padding: 0 0 80px;
   margin: 0;
   display: flex;
   gap: 40px;
+  justify-content: center;
 }
 
 .gamessection__card {
@@ -42,7 +43,7 @@
 }
 
 .gamessection__card:hover {
-  background: rgb(236, 235, 235);
+  background: rgb(209, 209, 209);
   transition: 1s ease;
   cursor: pointer;
 }
@@ -96,9 +97,9 @@
   font-size: 18px;
   line-height: 24px;
   font-weight: 400;
-  position: absolute;
   top: 120px;
   color: rgba(0, 0, 0, 0.9);
+  margin-bottom: 4px;
 }
 
 .gamessection__teams-name {
@@ -131,4 +132,12 @@
   100% {
     opacity: 1;
   }
+}
+
+.gamessection__preloader {
+  position: relative;
+  z-index: 10;
+  margin: 0 auto;
+  margin-top: 150px;
+  margin-bottom: 150px;
 }

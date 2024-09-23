@@ -50,7 +50,6 @@
 
 .modal__title {
   margin: 0;
-  width: 95px;
   height: 20px;
   padding-bottom: 24px;
   font-family: "Roboto";
@@ -183,4 +182,8 @@
   line-height: 14px;
   padding-top: 10px;
   font-weight: 400;
+}
+
+.modal__submit_hidden {
+  visibility: hidden;
 }
