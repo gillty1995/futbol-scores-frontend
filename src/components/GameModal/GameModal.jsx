@@ -6,9 +6,11 @@ import "./GameModal.css";
 
 function GameModal({ game, onClose }) {
   const [liveScore, setLiveScore] = useState(null);
+  const [liveEvents, setLiveEvents] = useState([]);
   const [isFormValid, setIsFormValid] = useState(true);
   const [isLiveGame, setIsLiveGame] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const checkIfLive = async () => {
       if (game) {
@@ -35,9 +37,11 @@ function GameModal({ game, onClose }) {
           if (liveGame) {
             setIsLiveGame(true);
             setLiveScore(liveGame);
+            setLiveEvents(liveGame.events || []); // Set live events from the API
           } else {
             setIsLiveGame(false);
             setLiveScore(null);
+            setLiveEvents([]);
           }
         } catch (error) {
           console.error("Error fetching live games:", error);
@@ -55,6 +59,31 @@ function GameModal({ game, onClose }) {
     console.log("Game saved!");
   };
 
+  const renderLiveEvents = () => {
+    if (!liveEvents.length) {
+      return <p className="gamemodal__no-updates">No updates yet</p>;
+    }
+
+    return (
+      <ul className="gamemodal__event-list">
+        {liveEvents.map((event, index) => (
+          <li key={index} className="gamemodal__event">
+            <span className="gamemodal__event-time">{event.time.elapsed}'</span>
+            <span className="gamemodal__event-detail">
+              {event.type === "Goal" &&
+                `⚽ ${event.detail} by ${event.player.name}`}
+              {event.type === "Card" &&
+                `${event.detail} card for ${event.player.name}`}
+              {event.type === "subst" &&
+                `Substitution: ${event.assist.name} replaced ${event.player.name}`}
+              {/* Add more event types as needed */}
+            </span>
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   const renderContent = () => {
     if (isLoading) {
       return <Preloader className="gamemodal__preloader" />;
@@ -70,15 +99,29 @@ function GameModal({ game, onClose }) {
         liveScore.score?.halftime?.away ??
         "N/A";
 
+      const gameElapsedTime = liveScore.fixture?.status?.elapsed ?? 0;
+      const gameStatus = liveScore.fixture?.status?.short ?? "";
+
       return (
         <div className="gamemodal">
           <h3 className="gamemodal__teams">
             {game.teams.home.name} vs {game.teams.away.name}
           </h3>
-          <p className="gamemodal__live-text">LIVE</p>
+          <div className="gamemodal__live-section">
+            <p className="gamemodal__live-text">LIVE</p>
+            <p className="gamemodal__time">
+              {gameElapsedTime}' {gameStatus && `(${gameStatus})`}
+            </p>
+          </div>
           <p className="gamemodal__score">
             {homeScore} - {awayScore}
           </p>
+
+          {/* Live events section */}
+          <div className="gamemodal__updates">
+            <h4 className="gamemodal__updates-header">Live Updates</h4>
+            {renderLiveEvents()}
+          </div>
         </div>
       );
     } else {

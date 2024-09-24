@@ -50,7 +50,7 @@
 }
 
 .gameslist__preloader_error {
-  font-family: inherit;
+  font-family: "Roboto";
   color: rgba(255, 0, 0, 1);
   font-size: 20px;
   text-align: center;

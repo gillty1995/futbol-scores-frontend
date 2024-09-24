@@ -15,8 +15,9 @@
   font-family: "Roboto";
   font-size: 18px;
   line-height: 24px;
-  justify-content: center;
-  display: flex;
+  align-self: center;
+  margin: 0;
+  padding-bottom: 10px;
 }
 
 @keyframes blink {
@@ -55,4 +56,34 @@
 
 .gamemodal__preloader {
   position: absolute;
+}
+
+.gamemodal__time {
+  font-family: "Inter";
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 20px;
+  align-self: center;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.gamemodal__live-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.gamemodal__updates {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.gamemodal__updates-header {
+  font-family: "Inter";
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
 }
