@@ -10,6 +10,7 @@ function Main({
   loading,
   error,
   setSearchResults,
+  openLoginModal,
 }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [searchDisabled, setSearchDisabled] = useState(false);

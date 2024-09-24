@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import AuthContext from "../../contexts/AuthContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import "./GamesSection.css";
 
-function GamesSection() {
+function GamesSection({ openLoginModal }) {
   const { teamId } = useParams();
   const [games, setGames] = useState([]);
   const [teamName, setTeamName] = useState("");
@@ -13,7 +14,7 @@ function GamesSection() {
   const [error, setError] = useState(null);
   const [selectedGame, setSelectedGame] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [fade, setFade] = useState(false);
+  const { isLoggedIn } = useContext(AuthContext);
 
   const today = new Date();
   const twoWeeksFromNow = new Date(today);
@@ -59,7 +60,7 @@ function GamesSection() {
     const fetchTeamData = async () => {
       setLoading(true);
       setError(null);
-      setFade(true);
+
       setTimeout(async () => {
         try {
           const teamResponse = await axios.get(
@@ -99,11 +100,9 @@ function GamesSection() {
           });
 
           setGames(sortedGames);
-          setFade(false);
         } catch (err) {
           console.error("Error fetching data:", err);
           setError(err);
-          setFade(false);
         } finally {
           setLoading(false);
         }
@@ -179,7 +178,12 @@ function GamesSection() {
         ))}
       </ul>
       {modalOpen && selectedGame && (
-        <GameModal game={selectedGame} onClose={handleCloseModal} />
+        <GameModal
+          game={selectedGame}
+          onClose={handleCloseModal}
+          isLoggedIn={isLoggedIn}
+          openLoginModal={openLoginModal}
+        />
       )}
     </div>
   );

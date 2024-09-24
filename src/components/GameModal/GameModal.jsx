@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import Preloader from "../Preloader/Preloader";
 import "./GameModal.css";
 
-function GameModal({ game, onClose }) {
+function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
+  const updatesRef = useRef(null);
   const [liveScore, setLiveScore] = useState(null);
   const [liveEvents, setLiveEvents] = useState([]);
   const [isFormValid, setIsFormValid] = useState(true);
   const [isLiveGame, setIsLiveGame] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const hasScrolled = useRef(false);
 
   useEffect(() => {
     const checkIfLive = async () => {
@@ -37,7 +39,7 @@ function GameModal({ game, onClose }) {
           if (liveGame) {
             setIsLiveGame(true);
             setLiveScore(liveGame);
-            setLiveEvents(liveGame.events || []); // Set live events from the API
+            setLiveEvents(liveGame.events || []); // live events from API
           } else {
             setIsLiveGame(false);
             setLiveScore(null);
@@ -54,32 +56,87 @@ function GameModal({ game, onClose }) {
     checkIfLive();
   }, [game]);
 
-  const handleSaveGame = (event) => {
-    event.preventDefault();
+  // Smooth scroll effect
+  useEffect(() => {
+    if (updatesRef.current && !hasScrolled.current) {
+      hasScrolled.current = true;
+      const updatesList = updatesRef.current;
+      const scrollDuration = 10000;
+      const totalScrollHeight = updatesList.scrollHeight;
+      const startTime = performance.now();
+
+      const scrollDown = (currentTime) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / scrollDuration, 1);
+
+        updatesList.scrollTop = totalScrollHeight * progress;
+
+        if (progress < 1) {
+          requestAnimationFrame(scrollDown);
+        } else {
+          setTimeout(() => {
+            updatesList.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }, 50);
+        }
+      };
+
+      requestAnimationFrame(scrollDown);
+    }
+  }, [liveEvents]); // Trigger when liveEvents change
+
+  const handleSaveGame = (e) => {
+    e.preventDefault();
+    console.log("User logged in:", isLoggedIn);
+    if (!isLoggedIn) {
+      console.log("Opening login modal");
+      onClose();
+      openLoginModal();
+      return;
+    }
     console.log("Game saved!");
   };
 
   const renderLiveEvents = () => {
     if (!liveEvents.length) {
-      return <p className="gamemodal__no-updates">No updates yet</p>;
+      return <p className="gamemodal__no-updates">No updates yet...</p>;
     }
 
     return (
-      <ul className="gamemodal__event-list">
-        {liveEvents.map((event, index) => (
-          <li key={index} className="gamemodal__event">
-            <span className="gamemodal__event-time">{event.time.elapsed}'</span>
-            <span className="gamemodal__event-detail">
-              {event.type === "Goal" &&
-                `⚽ ${event.detail} by ${event.player.name}`}
-              {event.type === "Card" &&
-                `${event.detail} card for ${event.player.name}`}
-              {event.type === "subst" &&
-                `Substitution: ${event.assist.name} replaced ${event.player.name}`}
-              {/* Add more event types as needed */}
-            </span>
-          </li>
-        ))}
+      <ul className="gamemodal__event-list" ref={updatesRef}>
+        {liveEvents
+          .slice()
+          .reverse()
+          .map((event, index) => {
+            const teamName =
+              event.team.id === game.teams.home.id
+                ? game.teams.home.name
+                : game.teams.away.name;
+
+            return (
+              <li key={index} className="gamemodal__event">
+                <span className="gamemodal__event-time">
+                  {event.time.elapsed}'
+                </span>
+                <span className="gamemodal__event-detail">
+                  {event.type === "Goal" &&
+                    `⚽ ${event.detail} by ${event.player.name} (${teamName})`}
+                  {event.type === "Card" &&
+                    `🟨 ${event.detail} card for ${event.player.name} (${teamName})`}
+                  {event.type === "subst" &&
+                    `🔄 Substitution: ${event.assist.name} replaced ${event.player.name} (${teamName})`}
+                  {event.type === "Offside" &&
+                    `🚫 ${event.player.name} is offside! (${teamName})`}
+                  {event.type === "Foul" &&
+                    `🚫 ${event.player.name} committed a foul (${teamName})`}
+                  {event.type === "Goal Disallowed" &&
+                    `🚫 Goal overturned: ${event.player.name} scored (${teamName})`}
+                </span>
+              </li>
+            );
+          })}
       </ul>
     );
   };

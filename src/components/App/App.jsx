@@ -197,7 +197,10 @@ function App() {
             />
             <Route path="/api-data" element={<ApiData />} />
             <Route path="/saved-games" element={<SavedGamesSection />} />
-            <Route path="/team/:teamId" element={<GamesSection />} />
+            <Route
+              path="/team/:teamId"
+              element={<GamesSection openLoginModal={openLoginModal} />}
+            />
           </Routes>
           <Footer />
         </div>

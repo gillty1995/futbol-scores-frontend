@@ -28,7 +28,6 @@
 .gameslist__link {
   display: block;
   padding: 10px;
-  /* background: rgba(245, 246, 247, 1); */
   background: rgba(230, 232, 235, 0.4);
   border: 1px solid #ddd;
   border-radius: 5px;

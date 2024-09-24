@@ -86,4 +86,24 @@
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
+  margin: 0;
+  padding: 18px 0 5px;
+}
+
+.gamemodal__event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 100px;
+  overflow-y: auto;
+  border: none;
+  padding: 10px;
+  background-color: transparent;
+  border-radius: 10px;
+  opacity: 0.9;
+}
+
+.gamemodal__event-list:hover {
+  background-color: #eeeeee;
+  transition: 1s ease;
 }
