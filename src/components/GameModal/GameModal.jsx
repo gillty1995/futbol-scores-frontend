@@ -40,7 +40,8 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
             setIsLiveGame(
               fixtureStatus.short === "In Play" ||
                 fixtureStatus.short === "1H" ||
-                fixtureStatus.short === "2H"
+                fixtureStatus.short === "2H" ||
+                fixtureStatus.short === "HT"
             );
           } else {
             setIsLiveGame(false);
@@ -178,8 +179,18 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
             {game.teams.home.name} vs {game.teams.away.name}
           </h3>
           <div className="gamemodal__live-section">
-            <p className="gamemodal__live-text">
-              {isLiveGame ? "LIVE" : "FINAL"}
+            <p className="gamemodal__live-section-text">
+              {isLiveGame ? (
+                gameStatus === "HT" ? (
+                  <span className="gamemodal__half-time-text">
+                    AT HALF TIME
+                  </span>
+                ) : (
+                  <span className="gamemodal__live-text">LIVE</span>
+                )
+              ) : (
+                <span className="gamemodal__live-text-final">FINAL</span>
+              )}
             </p>
             <p className="gamemodal__time">
               {isLiveGame ? `${gameElapsedTime}'` : gameStatus}

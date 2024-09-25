@@ -7,31 +7,6 @@
   justify-content: center;
 }
 
-.gamemodal__live-text {
-  color: red;
-  font-weight: bold;
-  text-transform: uppercase;
-  animation: blink 2.5s infinite ease-in-out;
-  font-family: "Roboto";
-  font-size: 18px;
-  line-height: 24px;
-  align-self: center;
-  margin: 0;
-  padding-bottom: 10px;
-}
-
-@keyframes blink {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
 .gamemodal__date {
   display: flex;
   justify-content: center;
@@ -106,4 +81,65 @@
 .gamemodal__event-list:hover {
   background-color: #eeeeee;
   transition: 1s ease;
+}
+
+.gamemodal__live-text-final {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  align-self: center;
+  margin: 0;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.gamemodal__live-text {
+  color: red;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: blink 2.5s infinite ease-in-out;
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  align-self: center;
+  margin: 0;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.gamemodal__live-section-text {
+  margin: 0;
+  padding: 0;
+}
+
+.gamemodal__half-time-text {
+  color: red;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: blink 2.5s infinite ease-in-out;
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  align-self: center;
+  margin: 0;
+  padding-bottom: 10px;
+  display: flex;
+  justify-content: center;
 }
