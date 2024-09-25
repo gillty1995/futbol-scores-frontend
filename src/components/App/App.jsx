@@ -13,6 +13,7 @@ import Footer from "../Footer/Footer";
 import LoginModal from "../LoginModal/LoginModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
 import GamesSection from "../GamesSection/GamesSection";
+import AllLiveGamesSection from "../AllLiveGamesSection/AllLiveGamesSection";
 
 import "./App.css";
 
@@ -196,6 +197,10 @@ function App() {
               }
             />
             <Route path="/api-data" element={<ApiData />} />
+            <Route
+              path="/live"
+              element={<AllLiveGamesSection openLoginModal={openLoginModal} />}
+            />
             <Route path="/saved-games" element={<SavedGamesSection />} />
             <Route
               path="/team/:teamId"

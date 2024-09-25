@@ -75,7 +75,6 @@ function GamesSection({ openLoginModal }) {
               },
             }
           );
-          console.log("Team Response:", teamResponse.data);
           const teamData = teamResponse.data.response[0];
           setTeamName(teamData.team.name);
 
@@ -131,52 +130,56 @@ function GamesSection({ openLoginModal }) {
         Games for Team {teamName} from {formatDate(today)} to{" "}
         {formatDate(twoWeeksFromNow)}
       </h2>
-      <ul className="gamessection__card-list">
-        {games.map((game) => (
-          <li
-            key={game.fixture.id}
-            className="gamessection__card"
-            onClick={() => handleCardClick(game)}
-          >
-            <div className="gamessection__teams-date">
-              <span
-                className={`gamessection__date ${
-                  isLive(game.fixture.date) ? "gamessection__live" : ""
-                }`}
-              >
-                {isLive(game.fixture.date)
-                  ? "LIVE"
-                  : `${formatDate(game.fixture.date)} ${formatTime(
-                      game.fixture.date
-                    )}`}
-              </span>
-            </div>
-            <div className="gamessection__teams">
-              <div className="gamessection__team">
-                <img
-                  src={game.teams.home.logo}
-                  alt={`${game.teams.home.name} logo`}
-                  className="gamessection__team-logo"
-                />
-                <span className="gamessection__teams-name">
-                  {game.teams.home.name}
+      {games.length === 0 ? (
+        <p className="gamessection__no-games">No games during this period.</p> // Display this message if no games are found
+      ) : (
+        <ul className="gamessection__card-list">
+          {games.map((game) => (
+            <li
+              key={game.fixture.id}
+              className="gamessection__card"
+              onClick={() => handleCardClick(game)}
+            >
+              <div className="gamessection__teams-date">
+                <span
+                  className={`gamessection__date ${
+                    isLive(game.fixture.date) ? "gamessection__live" : ""
+                  }`}
+                >
+                  {isLive(game.fixture.date)
+                    ? "LIVE"
+                    : `${formatDate(game.fixture.date)} ${formatTime(
+                        game.fixture.date
+                      )}`}
                 </span>
               </div>
-              <span className="gamessection__vs">vs</span>
-              <div className="gamessection__team">
-                <img
-                  src={game.teams.away.logo}
-                  alt={`${game.teams.away.name} logo`}
-                  className="gamessection__team-logo"
-                />
-                <span className="gamessection__teams-name">
-                  {game.teams.away.name}
-                </span>
+              <div className="gamessection__teams">
+                <div className="gamessection__team">
+                  <img
+                    src={game.teams.home.logo}
+                    alt={`${game.teams.home.name} logo`}
+                    className="gamessection__team-logo"
+                  />
+                  <span className="gamessection__teams-name">
+                    {game.teams.home.name}
+                  </span>
+                </div>
+                <span className="gamessection__vs">vs</span>
+                <div className="gamessection__team">
+                  <img
+                    src={game.teams.away.logo}
+                    alt={`${game.teams.away.name} logo`}
+                    className="gamessection__team-logo"
+                  />
+                  <span className="gamessection__teams-name">
+                    {game.teams.away.name}
+                  </span>
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
       {modalOpen && selectedGame && (
         <GameModal
           game={selectedGame}

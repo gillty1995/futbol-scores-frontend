@@ -26,20 +26,22 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
                 "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
               },
               params: {
-                live: "all",
+                id: game.fixture.id, // Get specific game by its fixture ID
               },
             }
           );
 
-          const liveGames = response.data.response;
-          const liveGame = liveGames.find(
-            (liveGame) => liveGame.fixture.id === game.fixture.id
-          );
-
-          if (liveGame) {
-            setIsLiveGame(true);
-            setLiveScore(liveGame);
-            setLiveEvents(liveGame.events || []); // live events from API
+          const fixtureData = response.data.response[0]; // Assuming the response is an array
+          if (fixtureData) {
+            const fixtureStatus = fixtureData.fixture.status;
+            setLiveScore(fixtureData);
+            setLiveEvents(fixtureData.events || []);
+            // Set isLiveGame to true if the game is live
+            setIsLiveGame(
+              fixtureStatus.short === "In Play" ||
+                fixtureStatus.short === "1H" ||
+                fixtureStatus.short === "2H"
+            );
           } else {
             setIsLiveGame(false);
             setLiveScore(null);
@@ -61,7 +63,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
     if (updatesRef.current && !hasScrolled.current) {
       hasScrolled.current = true;
       const updatesList = updatesRef.current;
-      const scrollDuration = 10000;
+      const scrollDuration = 5000;
       const totalScrollHeight = updatesList.scrollHeight;
       const startTime = performance.now();
 
@@ -89,9 +91,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
 
   const handleSaveGame = (e) => {
     e.preventDefault();
-    console.log("User logged in:", isLoggedIn);
     if (!isLoggedIn) {
-      console.log("Opening login modal");
       onClose();
       openLoginModal();
       return;
@@ -146,16 +146,29 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
       return <Preloader className="gamemodal__preloader" />;
     }
 
-    if (isLiveGame && liveScore) {
-      const homeScore =
-        liveScore.score?.fulltime?.home ??
-        liveScore.score?.halftime?.home ??
-        "N/A";
-      const awayScore =
-        liveScore.score?.fulltime?.away ??
-        liveScore.score?.halftime?.away ??
-        "N/A";
+    const gameDate = new Date(game.fixture.date);
+    const now = new Date();
+    const isUpcoming = gameDate > now;
 
+    if (isUpcoming) {
+      return (
+        <div className="gamemodal">
+          <h3 className="gamemodal__teams">
+            {game.teams.home.name} vs {game.teams.away.name}
+          </h3>
+          <p className="gamemodal__date">
+            Date: {formatDate(game.fixture.date)}{" "}
+            {formatTime(game.fixture.date)}
+          </p>
+        </div>
+      );
+    }
+
+    if (liveScore) {
+      const homeScore =
+        liveScore?.goals?.home !== undefined ? liveScore.goals.home : "N/A";
+      const awayScore =
+        liveScore?.goals?.away !== undefined ? liveScore.goals.away : "N/A";
       const gameElapsedTime = liveScore.fixture?.status?.elapsed ?? 0;
       const gameStatus = liveScore.fixture?.status?.short ?? "";
 
@@ -165,9 +178,11 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
             {game.teams.home.name} vs {game.teams.away.name}
           </h3>
           <div className="gamemodal__live-section">
-            <p className="gamemodal__live-text">LIVE</p>
+            <p className="gamemodal__live-text">
+              {isLiveGame ? "LIVE" : "FINAL"}
+            </p>
             <p className="gamemodal__time">
-              {gameElapsedTime}' {gameStatus && `(${gameStatus})`}
+              {isLiveGame ? `${gameElapsedTime}'` : gameStatus}
             </p>
           </div>
           <p className="gamemodal__score">
