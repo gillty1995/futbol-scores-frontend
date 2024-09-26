@@ -13,51 +13,50 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
   const [isLoading, setIsLoading] = useState(true);
   const hasScrolled = useRef(false);
 
-  useEffect(() => {
-    const checkIfLive = async () => {
-      if (game) {
-        setIsLoading(true);
-        try {
-          const response = await axios.get(
-            `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
-            {
-              headers: {
-                "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
-                "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
-              },
-              params: {
-                id: game.fixture.id, // Get specific game by its fixture ID
-              },
-            }
-          );
-
-          const fixtureData = response.data.response[0]; // Assuming the response is an array
-          if (fixtureData) {
-            const fixtureStatus = fixtureData.fixture.status;
-            setLiveScore(fixtureData);
-            setLiveEvents(fixtureData.events || []);
-            // Set isLiveGame to true if the game is live
-            setIsLiveGame(
-              fixtureStatus.short === "In Play" ||
-                fixtureStatus.short === "1H" ||
-                fixtureStatus.short === "2H" ||
-                fixtureStatus.short === "HT" ||
-                fixtureStatus.short === "ET" // Extra time
-            );
-          } else {
-            setIsLiveGame(false);
-            setLiveScore(null);
-            setLiveEvents([]);
+  const fetchLiveGameData = async () => {
+    if (game) {
+      setIsLoading(true);
+      try {
+        const response = await axios.get(
+          `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
+          {
+            headers: {
+              "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+              "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+            },
+            params: {
+              id: game.fixture.id, // Get specific game by its fixture ID
+            },
           }
-        } catch (error) {
-          console.error("Error fetching live games:", error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
+        );
 
-    checkIfLive();
+        const fixtureData = response.data.response[0]; // Assuming the response is an array
+        if (fixtureData) {
+          const fixtureStatus = fixtureData.fixture.status;
+          setLiveScore(fixtureData);
+          setLiveEvents(fixtureData.events || []);
+          setIsLiveGame(
+            fixtureStatus.short === "In Play" ||
+              fixtureStatus.short === "1H" ||
+              fixtureStatus.short === "2H" ||
+              fixtureStatus.short === "HT" ||
+              fixtureStatus.short === "ET" // Extra time
+          );
+        } else {
+          setIsLiveGame(false);
+          setLiveScore(null);
+          setLiveEvents([]);
+        }
+      } catch (error) {
+        console.error("Error fetching live games:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveGameData(); // Fetch data on component mount
   }, [game]);
 
   // Smooth scroll effect
@@ -90,6 +89,10 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
       requestAnimationFrame(scrollDown);
     }
   }, [liveEvents]); // Trigger when liveEvents change
+
+  const handleRefresh = () => {
+    fetchLiveGameData(); // Refresh data when the button is clicked
+  };
 
   const handleSaveGame = (e) => {
     e.preventDefault();
@@ -236,6 +239,14 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
       buttonText="Save Game"
       isFormValid={isFormValid}
       isLoading={isLoading}
+      extraAction={
+        <div className="modal__alternate-action">
+          <p className="modal__or">or</p>
+          <button className="modal__link" onClick={handleRefresh}>
+            Refresh
+          </button>
+        </div>
+      }
     >
       {renderContent()}
     </ModalWithForm>

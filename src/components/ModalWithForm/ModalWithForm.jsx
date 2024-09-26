@@ -58,7 +58,7 @@ function ModalWithForm({
             {buttonText}
           </button>
         </form>
-        <div className="modal__footer">{extraAction}</div>
+        {!isLoading && <div className="modal__footer">{extraAction}</div>}
       </div>
     </div>
   );
