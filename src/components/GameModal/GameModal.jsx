@@ -41,7 +41,8 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
               fixtureStatus.short === "In Play" ||
                 fixtureStatus.short === "1H" ||
                 fixtureStatus.short === "2H" ||
-                fixtureStatus.short === "HT"
+                fixtureStatus.short === "HT" ||
+                fixtureStatus.short === "ET" // Extra time
             );
           } else {
             setIsLiveGame(false);
@@ -185,6 +186,10 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
                   <span className="gamemodal__half-time-text">
                     AT HALF TIME
                   </span>
+                ) : gameStatus === "ET" ? (
+                  <span className="gamemodal__extra-time-text">
+                    LIVE - EXTRA TIME
+                  </span> // Custom class for extra time
                 ) : (
                   <span className="gamemodal__live-text">LIVE</span>
                 )
