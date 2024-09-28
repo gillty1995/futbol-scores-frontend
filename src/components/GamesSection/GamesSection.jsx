@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
-import { getSavedGames } from "../../utils/auth";
 import "./GamesSection.css";
 
 function GamesSection({ openLoginModal, saveGame }) {
