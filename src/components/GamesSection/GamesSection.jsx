@@ -4,9 +4,10 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
+import { getSavedGames } from "../../utils/auth";
 import "./GamesSection.css";
 
-function GamesSection({ openLoginModal, saveGame, homeTeamId, awayTeamId }) {
+function GamesSection({ openLoginModal, saveGame }) {
   const { teamId } = useParams();
   const [games, setGames] = useState([]);
   const [teamName, setTeamName] = useState("");
@@ -70,7 +71,7 @@ function GamesSection({ openLoginModal, saveGame, homeTeamId, awayTeamId }) {
               "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
             },
             params: {
-              team: [homeTeamId, awayTeamId],
+              id: teamId,
             },
           }
         );
@@ -113,7 +114,7 @@ function GamesSection({ openLoginModal, saveGame, homeTeamId, awayTeamId }) {
     };
 
     fetchTeamData();
-  }, [teamId, startDate, endDate, homeTeamId, awayTeamId]);
+  }, [teamId, startDate, endDate]);
 
   const handleCardClick = (game) => {
     setSelectedGame(game);
