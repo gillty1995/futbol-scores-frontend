@@ -5,7 +5,7 @@ import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import "./AllLiveGamesSection.css";
 
-function AllLiveGamesSection({ openLoginModal }) {
+function AllLiveGamesSection({ openLoginModal, saveGame }) {
   const [liveGames, setLiveGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,7 +34,7 @@ function AllLiveGamesSection({ openLoginModal }) {
         if (response.data && response.data.response) {
           setLiveGames(response.data.response);
         } else {
-          setLiveGames([]); // Set to empty if no games found
+          setLiveGames([]);
         }
       } catch (err) {
         setError(err);
@@ -57,7 +57,7 @@ function AllLiveGamesSection({ openLoginModal }) {
   };
 
   const handleShowMore = () => {
-    setVisibleGamesCount((prevCount) => prevCount + 10); // Show 20 more games
+    setVisibleGamesCount((prevCount) => prevCount + 10);
   };
 
   const renderTeamLogo = (team) => {
@@ -128,6 +128,7 @@ function AllLiveGamesSection({ openLoginModal }) {
           onClose={handleCloseModal}
           isLoggedIn={isLoggedIn}
           openLoginModal={openLoginModal}
+          saveGame={saveGame}
         />
       )}
     </div>

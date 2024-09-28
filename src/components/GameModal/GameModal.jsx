@@ -4,13 +4,16 @@ import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import Preloader from "../Preloader/Preloader";
 import "./GameModal.css";
 
-function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
+function GameModal({ game, onClose, isLoggedIn, openLoginModal, saveGame }) {
+  console.log("Is user logged in?", isLoggedIn);
+
   const updatesRef = useRef(null);
   const [liveScore, setLiveScore] = useState(null);
   const [liveEvents, setLiveEvents] = useState([]);
   const [isFormValid, setIsFormValid] = useState(true);
   const [isLiveGame, setIsLiveGame] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [buttonText, setButtonText] = useState("Save Game");
   const hasScrolled = useRef(false);
 
   const fetchLiveGameData = async () => {
@@ -25,12 +28,12 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
               "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
             },
             params: {
-              id: game.fixture.id, // Get specific game by its fixture ID
+              id: game.fixture.id,
             },
           }
         );
 
-        const fixtureData = response.data.response[0]; // Assuming the response is an array
+        const fixtureData = response.data.response[0];
         if (fixtureData) {
           const fixtureStatus = fixtureData.fixture.status;
           setLiveScore(fixtureData);
@@ -40,7 +43,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
               fixtureStatus.short === "1H" ||
               fixtureStatus.short === "2H" ||
               fixtureStatus.short === "HT" ||
-              fixtureStatus.short === "ET" // Extra time
+              fixtureStatus.short === "ET"
           );
         } else {
           setIsLiveGame(false);
@@ -56,7 +59,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
   };
 
   useEffect(() => {
-    fetchLiveGameData(); // Fetch data on component mount
+    fetchLiveGameData();
   }, [game]);
 
   // Smooth scroll effect
@@ -88,20 +91,47 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
 
       requestAnimationFrame(scrollDown);
     }
-  }, [liveEvents]); // Trigger when liveEvents change
+  }, [liveEvents]);
 
   const handleRefresh = () => {
-    fetchLiveGameData(); // Refresh data when the button is clicked
+    fetchLiveGameData();
   };
 
-  const handleSaveGame = (e) => {
+  const handleSaveGame = async (e) => {
     e.preventDefault();
+
     if (!isLoggedIn) {
       onClose();
       openLoginModal();
       return;
     }
-    console.log("Game saved!");
+
+    setIsLoading(true);
+    setButtonText("Saving...");
+
+    try {
+      const gameData = {
+        fixtureId: game.fixture.id.toString(),
+        homeTeamId: game.teams.home.id.toString(),
+        awayTeamId: game.teams.away.id.toString(),
+        dateTime: game.fixture.date,
+      };
+
+      console.log("Game data being sent:", gameData);
+      await saveGame(gameData);
+
+      setButtonText("Game Saved");
+      setTimeout(() => setButtonText("Save Game"), 2000);
+    } catch (error) {
+      if (error.response) {
+        console.error("Error response:", error.response.data);
+      } else {
+        console.error("Error saving game:", error);
+      }
+      setButtonText("Save Failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const renderLiveEvents = () => {
@@ -236,7 +266,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
       isOpen={!!game}
       onClose={onClose}
       onSubmit={handleSaveGame}
-      buttonText="Save Game"
+      buttonText={buttonText}
       isFormValid={isFormValid}
       isLoading={isLoading}
       extraAction={

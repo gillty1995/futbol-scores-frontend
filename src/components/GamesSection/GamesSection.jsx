@@ -6,7 +6,7 @@ import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import "./GamesSection.css";
 
-function GamesSection({ openLoginModal }) {
+function GamesSection({ openLoginModal, saveGame, homeTeamId, awayTeamId }) {
   const { teamId } = useParams();
   const [games, setGames] = useState([]);
   const [teamName, setTeamName] = useState("");
@@ -15,6 +15,7 @@ function GamesSection({ openLoginModal }) {
   const [selectedGame, setSelectedGame] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
+  const { setTeamData } = useContext(AuthContext);
 
   const today = new Date();
   const twoWeeksFromNow = new Date(today);
@@ -60,56 +61,59 @@ function GamesSection({ openLoginModal }) {
     const fetchTeamData = async () => {
       setLoading(true);
       setError(null);
-
-      setTimeout(async () => {
-        try {
-          const teamResponse = await axios.get(
-            `https://api-football-v1.p.rapidapi.com/v3/teams`,
-            {
-              headers: {
-                "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
-                "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
-              },
-              params: {
-                id: teamId,
-              },
-            }
-          );
-          const teamData = teamResponse.data.response[0];
-          setTeamName(teamData.team.name);
-
-          const gamesResponse = await axios.get(
-            `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
-            {
-              headers: {
-                "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
-                "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
-              },
-              params: {
-                team: teamId,
-                season: new Date().getFullYear(),
-                from: startDate,
-                to: endDate,
-              },
-            }
-          );
-
-          const sortedGames = gamesResponse.data.response.sort((a, b) => {
-            return new Date(a.fixture.date) - new Date(b.fixture.date);
-          });
-
-          setGames(sortedGames);
-        } catch (err) {
-          console.error("Error fetching data:", err);
-          setError(err);
-        } finally {
-          setLoading(false);
+      try {
+        const teamResponse = await axios.get(
+          `https://api-football-v1.p.rapidapi.com/v3/teams`,
+          {
+            headers: {
+              "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+              "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+            },
+            params: {
+              team: [homeTeamId, awayTeamId],
+            },
+          }
+        );
+        console.log("Team Response:", teamResponse.data);
+        console.log("Full Team Response:", teamResponse.data);
+        console.log("Team Response Array:", teamResponse.data.response);
+        const teamData = teamResponse.data.response[0];
+        if (!teamData) {
+          throw new Error("No team data found");
         }
-      }, 300);
+        setTeamName(teamData.team.name);
+        setTeamData(teamData);
+
+        const gamesResponse = await axios.get(
+          `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
+          {
+            headers: {
+              "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+              "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+            },
+            params: {
+              team: teamId,
+              season: new Date().getFullYear(),
+              from: startDate,
+              to: endDate,
+            },
+          }
+        );
+
+        const sortedGames = gamesResponse.data.response.sort((a, b) => {
+          return new Date(a.fixture.date) - new Date(b.fixture.date);
+        });
+        setGames(sortedGames);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchTeamData();
-  }, [teamId, startDate, endDate]);
+  }, [teamId, startDate, endDate, homeTeamId, awayTeamId]);
 
   const handleCardClick = (game) => {
     setSelectedGame(game);
@@ -131,7 +135,7 @@ function GamesSection({ openLoginModal }) {
         {formatDate(twoWeeksFromNow)}
       </h2>
       {games.length === 0 ? (
-        <p className="gamessection__no-games">No games during this period.</p> // Display this message if no games are found
+        <p className="gamessection__no-games">No games during this period.</p>
       ) : (
         <ul className="gamessection__card-list">
           {games.map((game) => (
@@ -186,6 +190,7 @@ function GamesSection({ openLoginModal }) {
           onClose={handleCloseModal}
           isLoggedIn={isLoggedIn}
           openLoginModal={openLoginModal}
+          saveGame={saveGame}
         />
       )}
     </div>

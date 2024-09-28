@@ -2,7 +2,12 @@ import { useState, useEffect, useContext } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import AuthContext from "../../contexts/AuthContext";
-import { loginUser, registUser, checkToken } from "../../utils/auth";
+import {
+  loginUser,
+  registUser,
+  checkToken,
+  saveGame as saveGameToApi,
+} from "../../utils/auth";
 import axios from "axios";
 
 import Header from "../Header/Header";
@@ -29,6 +34,7 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [savedGames, setSavedGames] = useState([]);
   const navigate = useNavigate();
 
   const handleSearch = async () => {
@@ -77,6 +83,7 @@ function App() {
         })
         .catch((err) => {
           console.error("Token validation failed:", err);
+          localStorage.removeItem("jwt");
           setCurrentUser(null);
           setIsLoggedIn(false);
           logout();
@@ -129,7 +136,7 @@ function App() {
   const handleLogout = () => {
     setCurrentUser(null);
     setIsLoggedIn(false);
-    localStorage.removeItem("user");
+    localStorage.removeItem("jwt");
   };
 
   const openLoginModal = () => {
@@ -170,6 +177,18 @@ function App() {
     setSearchResults([]);
   };
 
+  const saveGame = async (game) => {
+    console.log("Full Game object:", game);
+    try {
+      const response = await saveGameToApi(game);
+      console.log("Game saved successfully:", response);
+
+      setSavedGames((prevSavedGames) => [...prevSavedGames, response]);
+    } catch (error) {
+      console.error("Error saving game:", error);
+    }
+  };
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page page__background-image">
@@ -199,12 +218,25 @@ function App() {
             <Route path="/api-data" element={<ApiData />} />
             <Route
               path="/live"
-              element={<AllLiveGamesSection openLoginModal={openLoginModal} />}
+              element={
+                <AllLiveGamesSection
+                  openLoginModal={openLoginModal}
+                  saveGame={saveGame}
+                />
+              }
             />
-            <Route path="/saved-games" element={<SavedGamesSection />} />
+            <Route
+              path="/saved-games"
+              element={<SavedGamesSection savedGames={savedGames} />}
+            />
             <Route
               path="/team/:teamId"
-              element={<GamesSection openLoginModal={openLoginModal} />}
+              element={
+                <GamesSection
+                  openLoginModal={openLoginModal}
+                  saveGame={saveGame}
+                />
+              }
             />
           </Routes>
           <Footer />

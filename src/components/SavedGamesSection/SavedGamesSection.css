@@ -1,0 +1,155 @@
+.savedgamessection {
+  position: relative;
+  z-index: 10;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+}
+
+.savedgamessection__header {
+  font-family: "Roboto Slab", serif;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 20px;
+  text-align: center;
+  padding-bottom: 40px;
+}
+
+.savedgamessection__card-list {
+  list-style: none;
+  padding: 0 0 80px;
+  margin: 0;
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.savedgamessection__card {
+  background: rgba(255, 255, 255, 1);
+  color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  justify-content: center;
+  text-align: center;
+}
+
+.savedgamessection__card:hover {
+  background: rgb(209, 209, 209);
+  transition: 1s ease;
+  cursor: pointer;
+}
+
+.savedgamessection__team-logo {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 5px;
+}
+
+.savedgamessection__date-time {
+  font-size: 16px;
+  color: #dddddd;
+  margin-bottom: 10px;
+}
+
+.savedgamessection__date {
+  display: block;
+}
+
+.savedgamessection__time {
+  display: block;
+}
+
+.savedgamessection__teams {
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  color: rgba(0, 0, 0, 0.9);
+  margin-top: 15px;
+}
+
+.savedgamessection__team {
+  margin: 0 10px;
+}
+
+.savedgamessection__vs {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.9);
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.savedgamessection__teams-date {
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 400;
+  top: 120px;
+  color: rgba(0, 0, 0, 0.9);
+  margin-bottom: 4px;
+}
+
+.savedgamessection__teams-name {
+  font-family: "Roboto";
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70px;
+  display: block;
+}
+
+.savedgamessection__live {
+  color: red;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: blink 2.5s infinite ease-in-out;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.savedgamessection__preloader {
+  position: relative;
+  z-index: 10;
+  margin: 0 auto;
+  margin-top: 150px;
+  margin-bottom: 150px;
+}
+
+.savedgamessection__no-games {
+  display: flex;
+  justify-content: center;
+  font-family: "Roboto Slab", serif;
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 50px;
+}
