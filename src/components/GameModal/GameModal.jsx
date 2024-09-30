@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import Preloader from "../Preloader/Preloader";
+import { saveGame } from "../../utils/auth";
+import gameData from "../../utils/gameData";
 import "./GameModal.css";
 
-function GameModal({ game, onClose, isLoggedIn, openLoginModal, saveGame }) {
+function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
   console.log("Is user logged in?", isLoggedIn);
 
   const updatesRef = useRef(null);
@@ -110,17 +112,16 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, saveGame }) {
     setButtonText("Saving...");
 
     try {
-      const gameData = {
-        fixtureId: game.fixture.id.toString(),
-        homeTeamId: game.teams.home.id.toString(),
-        awayTeamId: game.teams.away.id.toString(),
-        dateTime: game.fixture.date,
-        homeTeamName: game.teams.home.name,
-        awayTeamName: game.teams.away.name,
-      };
+      const formattedGameData = gameData(game);
 
-      console.log("Game data being sent:", gameData);
-      await saveGame(gameData);
+      if (!formattedGameData) {
+        console.error("Invalid game data");
+        setButtonText("Save Failed");
+        return;
+      }
+
+      console.log("Game data being sent:", formattedGameData);
+      await saveGame(formattedGameData);
 
       setButtonText("Game Saved");
       setTimeout(() => setButtonText("Save Game"), 2000);

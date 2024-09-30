@@ -12,11 +12,8 @@ const gameData = (game) => {
     dateTime: game.fixture.date,
     homeTeamName: game.teams.home.name,
     awayTeamName: game.teams.away.name,
-    homeTeamLogo: game.teams.home.logo, // Optionally include logos
+    homeTeamLogo: game.teams.home.logo,
     awayTeamLogo: game.teams.away.logo,
-    status: game.fixture.status.short, // Optional status, in case you need it
-    score: game.score, // Optional, if score is available
-    events: game.events, // Optional, if there are events (e.g., goals)
   };
 };
 
