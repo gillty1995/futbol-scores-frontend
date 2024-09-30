@@ -3,6 +3,7 @@ import AuthContext from "../../contexts/AuthContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
+import gameData from "../../utils/gameData"; // Import the gameData function
 import "./SavedGamesSection.css";
 
 function SavedGamesSection({ openLoginModal }) {
@@ -34,7 +35,8 @@ function SavedGamesSection({ openLoginModal }) {
 
         console.log("Fetched saved games:", response.data);
         if (Array.isArray(response.data)) {
-          setSavedGames(response.data);
+          const formattedGames = response.data.map((game) => gameData(game));
+          setSavedGames(formattedGames);
         } else {
           console.error("Expected an array but got:", response.data);
           setSavedGames([]);
@@ -105,16 +107,16 @@ function SavedGamesSection({ openLoginModal }) {
               </div>
               <div className="savedgamessection__teams">
                 <div className="savedgamessection__team">
-                  {renderTeamLogo(game.teams.home)}
+                  {renderTeamLogo(game.homeTeamId)}
                   <span className="savedgamessection__teams-name">
-                    {game.teams.home.name}
+                    {game.homeTeam.name}i
                   </span>
                 </div>
                 <span className="savedgamessection__vs">vs</span>
                 <div className="savedgamessection__team">
-                  {renderTeamLogo(game.teams.away)}
+                  {renderTeamLogo(game.awayTeam)}
                   <span className="savedgamessection__teams-name">
-                    {game.teams.away.name}
+                    {game.awayTeam.name}
                   </span>
                 </div>
               </div>

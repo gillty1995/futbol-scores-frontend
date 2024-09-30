@@ -115,6 +115,8 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, saveGame }) {
         homeTeamId: game.teams.home.id.toString(),
         awayTeamId: game.teams.away.id.toString(),
         dateTime: game.fixture.date,
+        homeTeamName: game.teams.home.name,
+        awayTeamName: game.teams.away.name,
       };
 
       console.log("Game data being sent:", gameData);

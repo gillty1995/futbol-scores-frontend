@@ -218,12 +218,7 @@ function App() {
             <Route path="/api-data" element={<ApiData />} />
             <Route
               path="/live"
-              element={
-                <AllLiveGamesSection
-                  openLoginModal={openLoginModal}
-                  saveGame={saveGame}
-                />
-              }
+              element={<AllLiveGamesSection openLoginModal={openLoginModal} />}
             />
             <Route
               path="/saved-games"
