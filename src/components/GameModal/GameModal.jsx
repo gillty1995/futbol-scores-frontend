@@ -6,9 +6,10 @@ import { saveGame } from "../../utils/auth";
 import gameData from "../../utils/gameData";
 import "./GameModal.css";
 
-function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
+function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
   console.log("Is user logged in?", isLoggedIn);
 
+  const userId = currentUser?.id;
   const updatesRef = useRef(null);
   const [liveScore, setLiveScore] = useState(null);
   const [liveEvents, setLiveEvents] = useState([]);
@@ -17,6 +18,10 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
   const [isLoading, setIsLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Save Game");
   const hasScrolled = useRef(false);
+
+  useEffect(() => {
+    console.log("Current User:", currentUser); // debugging
+  }, [currentUser]);
 
   const fetchLiveGameData = async () => {
     if (game) {
@@ -99,6 +104,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
     fetchLiveGameData();
   };
 
+  // Handle save game
   const handleSaveGame = async (e) => {
     e.preventDefault();
 
@@ -112,7 +118,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
     setButtonText("Saving...");
 
     try {
-      const formattedGameData = gameData(game);
+      const formattedGameData = gameData(game, userId);
 
       if (!formattedGameData) {
         console.error("Invalid game data");
@@ -225,7 +231,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal }) {
                 ) : gameStatus === "ET" ? (
                   <span className="gamemodal__extra-time-text">
                     LIVE - EXTRA TIME
-                  </span> // Custom class for extra time
+                  </span>
                 ) : (
                   <span className="gamemodal__live-text">LIVE</span>
                 )

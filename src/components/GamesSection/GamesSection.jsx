@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
@@ -16,6 +17,7 @@ function GamesSection({ openLoginModal, saveGame }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const { setTeamData } = useContext(AuthContext);
+  const { currentUser } = useContext(CurrentUserContext);
 
   const today = new Date();
   const twoWeeksFromNow = new Date(today);
@@ -191,6 +193,7 @@ function GamesSection({ openLoginModal, saveGame }) {
           isLoggedIn={isLoggedIn}
           openLoginModal={openLoginModal}
           saveGame={saveGame}
+          currentUser={currentUser}
         />
       )}
     </div>
