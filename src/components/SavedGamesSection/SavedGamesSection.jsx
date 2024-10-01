@@ -3,7 +3,7 @@ import AuthContext from "../../contexts/AuthContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
-import gameData from "../../utils/gameData"; // Import the gameData function
+import gameData from "../../utils/gameData";
 import "./SavedGamesSection.css";
 
 function SavedGamesSection({ openLoginModal }) {
@@ -123,7 +123,9 @@ function SavedGamesSection({ openLoginModal }) {
             </li>
           ))
         ) : (
-          <li>No saved games available at the moment.</li>
+          <li className="savedgamessection__no-games">
+            No saved games available at the moment.
+          </li>
         )}
       </ul>
       {visibleGamesCount < savedGames.length && (
