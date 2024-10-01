@@ -68,8 +68,8 @@ function App() {
       setCurrentUser(JSON.parse(user));
       setIsLoggedIn(true);
     }
-    console.log("Current User:", currentUser);
   }, []);
+  console.log(currentUser);
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");

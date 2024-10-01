@@ -1,11 +1,23 @@
-const gameData = (game, userId) => {
+const gameData = (game, currentUser) => {
   if (!game || !game.fixture || !game.teams) {
     return null;
+  }
+  console.log(currentUser);
+
+  const gameDateTime = new Date(game.fixture.date);
+  let status;
+
+  if (gameDateTime > new Date()) {
+    status = "scheduled";
+  } else if (gameDateTime <= new Date() && game.fixture.completed) {
+    status = "completed";
+  } else {
+    status = "live";
   }
 
   return {
     fixtureId: game.fixture.id.toString(),
-    user: userId,
+    user: currentUser,
     teams: {
       home: {
         id: game.teams.home.id.toString(),
@@ -19,7 +31,9 @@ const gameData = (game, userId) => {
       },
     },
     dateTime: new Date(game.fixture.date),
-    // status: "scheduled",
+    status: status,
+    liveScore: {},
+    liveEvents: [],
   };
 };
 

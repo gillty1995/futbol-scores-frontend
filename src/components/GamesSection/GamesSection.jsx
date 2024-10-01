@@ -17,7 +17,9 @@ function GamesSection({ openLoginModal, saveGame }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const { setTeamData } = useContext(AuthContext);
-  const { currentUser } = useContext(CurrentUserContext);
+  const currentUser = useContext(CurrentUserContext);
+
+  console.log(currentUser);
 
   const today = new Date();
   const twoWeeksFromNow = new Date(today);

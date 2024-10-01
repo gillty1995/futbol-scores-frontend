@@ -9,7 +9,7 @@ import "./GameModal.css";
 function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
   console.log("Is user logged in?", isLoggedIn);
 
-  const userId = currentUser?.id;
+  const userId = currentUser?._id;
   const updatesRef = useRef(null);
   const [liveScore, setLiveScore] = useState(null);
   const [liveEvents, setLiveEvents] = useState([]);
@@ -18,10 +18,6 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
   const [isLoading, setIsLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Save Game");
   const hasScrolled = useRef(false);
-
-  useEffect(() => {
-    console.log("Current User:", currentUser); // debugging
-  }, [currentUser]);
 
   const fetchLiveGameData = async () => {
     if (game) {
@@ -104,6 +100,13 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
     fetchLiveGameData();
   };
 
+  useEffect(() => {
+    if (currentUser) {
+      const data = gameData(game, currentUser);
+      console.log(data);
+    }
+  }, [currentUser, game]);
+
   // Handle save game
   const handleSaveGame = async (e) => {
     e.preventDefault();
@@ -120,6 +123,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
     try {
       const formattedGameData = gameData(game, userId);
 
+      console.log(formattedGameData);
       if (!formattedGameData) {
         console.error("Invalid game data");
         setButtonText("Save Failed");
