@@ -21,22 +21,22 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
   const hasScrolled = useRef(false);
 
   useEffect(() => {
-    const checkIfGameSaved = () => {
-      if (currentUser && game) {
-        const formattedGameData = gameData(game, currentUser);
-        const savedGames = currentUser.savedGames || [];
+    if (currentUser && game) {
+      console.log("Current User", currentUser);
+      const formattedGameData = gameData(game, currentUser);
+      const savedGames = currentUser.savedGames || [];
 
-        const isSaved = savedGames.some(
-          (savedGame) => savedGame.fixtureId === formattedGameData.fixtureId
-        );
+      console.log("Saved Games", savedGames);
 
-        setIsGameSaved(isSaved);
-        setButtonText(isSaved ? "Game Saved" : "Save Game");
-      }
-    };
+      const isSaved = savedGames.some(
+        (savedGame) => savedGame.fixtureId === formattedGameData.fixtureId
+      );
 
-    checkIfGameSaved();
+      setButtonText(isSaved ? "Game Saved" : "Save Game");
+    }
   }, [currentUser, game]);
+
+  console.log("Current user in game modal", currentUser);
 
   const fetchLiveGameData = async () => {
     if (game) {
@@ -296,7 +296,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
       isOpen={!!game}
       onClose={onClose}
       onSubmit={handleSaveGame}
-      buttonText={isGameSaved ? "Game Saved" : "Save Game"}
+      buttonText={buttonText}
       isFormValid={isFormValid}
       isLoading={isLoading}
       extraAction={

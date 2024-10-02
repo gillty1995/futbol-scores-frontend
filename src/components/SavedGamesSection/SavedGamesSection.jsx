@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import gameData from "../../utils/gameData";
 import "./SavedGamesSection.css";
 
-function SavedGamesSection({ openLoginModal, currentUser }) {
+function SavedGamesSection({ openLoginModal }) {
   const [savedGames, setSavedGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,6 +15,9 @@ function SavedGamesSection({ openLoginModal, currentUser }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
+  const currentUser = useContext(CurrentUserContext);
+
+  console.log("Current user in saved games section", currentUser);
 
   useEffect(() => {
     const fetchSavedGames = async () => {

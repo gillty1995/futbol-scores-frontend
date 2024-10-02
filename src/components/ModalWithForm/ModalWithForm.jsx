@@ -49,6 +49,7 @@ function ModalWithForm({
         <form className="modal__form" onSubmit={onSubmit}>
           {children}
           <button
+            onSubmit={onSubmit}
             type="submit"
             className={`modal__submit ${
               isLoading ? "modal__submit_hidden" : ""
