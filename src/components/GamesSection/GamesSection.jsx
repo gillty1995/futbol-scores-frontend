@@ -121,6 +121,7 @@ function GamesSection({ openLoginModal, saveGame }) {
 
   const handleCardClick = (game) => {
     setSelectedGame(game);
+    console.log(selectedGame);
     setModalOpen(true);
   };
 

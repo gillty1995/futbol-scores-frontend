@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import Preloader from "../Preloader/Preloader";
-import { saveGame } from "../../utils/auth";
+import { saveGame, unsaveGame } from "../../utils/auth";
 import gameData from "../../utils/gameData";
 import "./GameModal.css";
 
@@ -17,7 +17,26 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
   const [isLiveGame, setIsLiveGame] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Save Game");
+  const [isGameSaved, setIsGameSaved] = useState(false);
   const hasScrolled = useRef(false);
+
+  useEffect(() => {
+    const checkIfGameSaved = () => {
+      if (currentUser && game) {
+        const formattedGameData = gameData(game, currentUser);
+        const savedGames = currentUser.savedGames || [];
+
+        const isSaved = savedGames.some(
+          (savedGame) => savedGame.fixtureId === formattedGameData.fixtureId
+        );
+
+        setIsGameSaved(isSaved);
+        setButtonText(isSaved ? "Game Saved" : "Save Game");
+      }
+    };
+
+    checkIfGameSaved();
+  }, [currentUser, game]);
 
   const fetchLiveGameData = async () => {
     if (game) {
@@ -96,6 +115,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
     }
   }, [liveEvents]);
 
+  // handle refresh game
   const handleRefresh = () => {
     fetchLiveGameData();
   };
@@ -118,29 +138,26 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
     }
 
     setIsLoading(true);
-    setButtonText("Saving...");
-
     try {
       const formattedGameData = gameData(game, userId);
 
-      console.log(formattedGameData);
-      if (!formattedGameData) {
-        console.error("Invalid game data");
-        setButtonText("Save Failed");
+      if (!formattedGameData.fixtureId || !formattedGameData.dateTime) {
+        console.error("Missing required fields in formatted game data");
+        setIsLoading(false);
         return;
       }
 
-      console.log("Game data being sent:", formattedGameData);
-      await saveGame(formattedGameData);
-
-      setButtonText("Game Saved");
-      setTimeout(() => setButtonText("Save Game"), 2000);
-    } catch (error) {
-      if (error.response) {
-        console.error("Error response:", error.response.data);
+      if (isGameSaved) {
+        await unsaveGame(formattedGameData);
+        setButtonText("Save Game");
       } else {
-        console.error("Error saving game:", error);
+        await saveGame(formattedGameData);
+        setButtonText("Game Saved");
       }
+
+      setIsGameSaved((prev) => !prev);
+    } catch (error) {
+      console.error("Error saving game:", error);
       setButtonText("Save Failed");
     } finally {
       setIsLoading(false);
@@ -279,7 +296,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
       isOpen={!!game}
       onClose={onClose}
       onSubmit={handleSaveGame}
-      buttonText={buttonText}
+      buttonText={isGameSaved ? "Game Saved" : "Save Game"}
       isFormValid={isFormValid}
       isLoading={isLoading}
       extraAction={

@@ -90,3 +90,19 @@ export const getSavedGames = async () => {
     throw error;
   }
 };
+
+export const unsaveGame = async (gameData) => {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await fetch(`${baseUrl}/me/games:${fixturedId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return await processServerRequest(res);
+  } catch (error) {
+    console.error("Error fetching saved games:", error);
+    throw error;
+  }
+};

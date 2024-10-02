@@ -53,7 +53,7 @@ function ModalWithForm({
             className={`modal__submit ${
               isLoading ? "modal__submit_hidden" : ""
             }`}
-            disabled={!isFormValid}
+            disabled={!isFormValid || isLoading}
           >
             {buttonText}
           </button>

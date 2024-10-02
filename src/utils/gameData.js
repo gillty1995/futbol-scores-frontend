@@ -1,36 +1,38 @@
 const gameData = (game, currentUser) => {
-  if (!game || !game.fixture || !game.teams) {
+  console.log("Fetched game object:", game);
+
+  if (!game || !game.teams) {
+    console.error("Invalid game object:", game);
     return null;
   }
-  console.log(currentUser);
 
-  const gameDateTime = new Date(game.fixture.date);
+  const gameDateTime = new Date(game.dateTime || game.fixture?.date);
   let status;
 
   if (gameDateTime > new Date()) {
     status = "scheduled";
-  } else if (gameDateTime <= new Date() && game.fixture.completed) {
+  } else if (gameDateTime <= new Date() && game.completed) {
     status = "completed";
   } else {
     status = "live";
   }
 
   return {
-    fixtureId: game.fixture.id.toString(),
-    user: currentUser,
+    fixtureId: game.fixtureId || game.fixture.id.toString() || "N/A",
+    user: currentUser || "Unknown",
     teams: {
       home: {
-        id: game.teams.home.id.toString(),
-        name: game.teams.home.name,
-        logo: game.teams.home.logo,
+        id: game.teams.home.id?.toString() || "N/A",
+        name: game.teams.home.name || "Unknown",
+        logo: game.teams.home.logo || "",
       },
       away: {
-        id: game.teams.away.id.toString(),
-        name: game.teams.away.name,
-        logo: game.teams.away.logo,
+        id: game.teams.away.id?.toString() || "N/A",
+        name: game.teams.away.name || "Unknown",
+        logo: game.teams.away.logo || "",
       },
     },
-    dateTime: new Date(game.fixture.date),
+    dateTime: gameDateTime,
     status: status,
     liveScore: {},
     liveEvents: [],

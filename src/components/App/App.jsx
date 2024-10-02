@@ -69,7 +69,6 @@ function App() {
       setIsLoggedIn(true);
     }
   }, []);
-  console.log(currentUser);
 
   useEffect(() => {
     const token = localStorage.getItem("jwt");
@@ -181,9 +180,19 @@ function App() {
     console.log("Full Game object:", game);
     try {
       const response = await saveGameToApi(game);
-      console.log("Game saved successfully:", response);
+      console.log("Response from API:", response);
 
-      setSavedGames((prevSavedGames) => [...prevSavedGames, response]);
+      setSavedGames((prevSavedGames) => {
+        const updatedSavedGames = [...prevSavedGames, response];
+        console.log("Updated Saved Games:", updatedSavedGames);
+        return updatedSavedGames;
+      });
+
+      // Check if the game is saved
+      const isSaved = updatedSavedGames.some(
+        (savedGame) => savedGame.fixtureId === game.fixtureId
+      );
+      console.log(`Game ${isSaved ? "is" : "is not"} saved.`);
     } catch (error) {
       console.error("Error saving game:", error);
     }

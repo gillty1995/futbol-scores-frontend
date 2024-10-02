@@ -6,7 +6,7 @@ import Preloader from "../Preloader/Preloader";
 import gameData from "../../utils/gameData";
 import "./SavedGamesSection.css";
 
-function SavedGamesSection({ openLoginModal }) {
+function SavedGamesSection({ openLoginModal, currentUser }) {
   const [savedGames, setSavedGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -48,7 +48,9 @@ function SavedGamesSection({ openLoginModal }) {
         console.error("Error fetching saved games:", errorMessage);
         setError(new Error(errorMessage));
       } finally {
-        setLoading(false);
+        setTimeout(() => {
+          setLoading(false);
+        }, 1000);
       }
     };
 
@@ -68,6 +70,8 @@ function SavedGamesSection({ openLoginModal }) {
   const handleShowMore = () => {
     setVisibleGamesCount((prevCount) => prevCount + 10);
   };
+
+  console.log("Saved games before rendering:", savedGames);
 
   const renderTeamLogo = (team) => {
     return team.logo ? (
@@ -96,27 +100,27 @@ function SavedGamesSection({ openLoginModal }) {
         {savedGames.length > 0 ? (
           savedGames.slice(0, visibleGamesCount).map((game) => (
             <li
-              key={game.fixtureId || game.gameId}
+              key={game.fixtureId}
               className="savedgamessection__card"
               onClick={() => handleCardClick(game)}
             >
               <div className="savedgamessection__teams-date">
                 <span className="savedgamessection__date">
-                  {game.dateTime || "Date N/A"}
+                  {game.dateTime.toLocaleString() || "Date N/A"}
                 </span>
               </div>
               <div className="savedgamessection__teams">
                 <div className="savedgamessection__team">
-                  {renderTeamLogo(game.homeTeamId)}
+                  {renderTeamLogo(game.teams.home)}
                   <span className="savedgamessection__teams-name">
-                    {game.homeTeam.name}i
+                    {game.teams.home.name}
                   </span>
                 </div>
                 <span className="savedgamessection__vs">vs</span>
                 <div className="savedgamessection__team">
-                  {renderTeamLogo(game.awayTeam)}
+                  {renderTeamLogo(game.teams.away)}
                   <span className="savedgamessection__teams-name">
-                    {game.awayTeam.name}
+                    {game.teams.away.name}
                   </span>
                 </div>
               </div>
@@ -142,6 +146,7 @@ function SavedGamesSection({ openLoginModal }) {
           onClose={handleCloseModal}
           isLoggedIn={isLoggedIn}
           openLoginModal={openLoginModal}
+          currentUser={currentUser}
         />
       )}
     </div>
