@@ -7,7 +7,7 @@ import Preloader from "../Preloader/Preloader";
 import gameData from "../../utils/gameData";
 import "./SavedGamesSection.css";
 
-function SavedGamesSection({ openLoginModal }) {
+function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
   const [savedGames, setSavedGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +15,7 @@ function SavedGamesSection({ openLoginModal }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
-  const currentUser = useContext(CurrentUserContext);
+  // const currentUser = useContext(CurrentUserContext);
 
   console.log("Current user in saved games section", currentUser);
 
@@ -151,6 +151,7 @@ function SavedGamesSection({ openLoginModal }) {
           isLoggedIn={isLoggedIn}
           openLoginModal={openLoginModal}
           currentUser={currentUser}
+          handleUpdateUser={handleUpdateUser}
         />
       )}
     </div>

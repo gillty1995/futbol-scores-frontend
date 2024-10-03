@@ -1,13 +1,18 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
-import CurrentUserContext from "../../contexts/CurrentUserContext";
+// import CurrentUserContext from "../../contexts/CurrentUserContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import "./GamesSection.css";
 
-function GamesSection({ openLoginModal, saveGame }) {
+function GamesSection({
+  openLoginModal,
+  saveGame,
+  handleUpdateUser,
+  currentUser,
+}) {
   const { teamId } = useParams();
   const [games, setGames] = useState([]);
   const [teamName, setTeamName] = useState("");
@@ -17,7 +22,7 @@ function GamesSection({ openLoginModal, saveGame }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const { setTeamData } = useContext(AuthContext);
-  const currentUser = useContext(CurrentUserContext);
+  // const currentUser = useContext(CurrentUserContext);
 
   console.log(currentUser);
 
@@ -197,6 +202,7 @@ function GamesSection({ openLoginModal, saveGame }) {
           openLoginModal={openLoginModal}
           saveGame={saveGame}
           currentUser={currentUser}
+          handleUpdateUser={handleUpdateUser}
         />
       )}
     </div>

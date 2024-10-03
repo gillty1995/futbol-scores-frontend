@@ -138,6 +138,13 @@ function App() {
     localStorage.removeItem("jwt");
   };
 
+  const handleUpdateUser = (updatedUserData) => {
+    setCurrentUser((prevUser) => ({
+      ...prevUser,
+      ...updatedUserData,
+    }));
+  };
+
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
@@ -227,11 +234,23 @@ function App() {
             <Route path="/api-data" element={<ApiData />} />
             <Route
               path="/live"
-              element={<AllLiveGamesSection openLoginModal={openLoginModal} />}
+              element={
+                <AllLiveGamesSection
+                  openLoginModal={openLoginModal}
+                  handleUpdateUser={handleUpdateUser}
+                  currentUser={currentUser}
+                />
+              }
             />
             <Route
               path="/saved-games"
-              element={<SavedGamesSection savedGames={savedGames} />}
+              element={
+                <SavedGamesSection
+                  savedGames={savedGames}
+                  handleUpdateUser={handleUpdateUser}
+                  currentUser={currentUser}
+                />
+              }
             />
             <Route
               path="/team/:teamId"
@@ -239,6 +258,8 @@ function App() {
                 <GamesSection
                   openLoginModal={openLoginModal}
                   saveGame={saveGame}
+                  handleUpdateUser={handleUpdateUser}
+                  currentUser={currentUser}
                 />
               }
             />

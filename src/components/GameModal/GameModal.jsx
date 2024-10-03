@@ -6,7 +6,14 @@ import { saveGame, unsaveGame } from "../../utils/auth";
 import gameData from "../../utils/gameData";
 import "./GameModal.css";
 
-function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
+function GameModal({
+  game,
+  onClose,
+  isLoggedIn,
+  openLoginModal,
+  currentUser,
+  handleUpdateUser,
+}) {
   console.log("Is user logged in?", isLoggedIn);
 
   const userId = currentUser?._id;
@@ -158,11 +165,13 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
         currentUser.savedGames = currentUser.savedGames.filter(
           (savedGame) => savedGame.fixtureId !== fixtureId
         );
+        handleUpdateUser({ savedGames: currentUser.savedGames });
       } else {
         await saveGame(formattedGameData);
         setButtonText("Game Saved");
         setIsGameSaved(true);
         currentUser.savedGames.push(formattedGameData);
+        handleUpdateUser({ savedGames: currentUser.savedGames });
       }
 
       setIsGameSaved((prev) => !prev);

@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
-import CurrentUserContext from "../../contexts/CurrentUserContext";
+// import CurrentUserContext from "../../contexts/CurrentUserContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import "./AllLiveGamesSection.css";
 
-function AllLiveGamesSection({ openLoginModal, saveGame }) {
+function AllLiveGamesSection({
+  openLoginModal,
+  saveGame,
+  handleUpdateUser,
+  currentUser,
+}) {
   const [liveGames, setLiveGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +19,7 @@ function AllLiveGamesSection({ openLoginModal, saveGame }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
-  const currentUser = useContext(CurrentUserContext);
+  // const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
     const fetchLiveGames = async () => {
@@ -132,6 +137,7 @@ function AllLiveGamesSection({ openLoginModal, saveGame }) {
           openLoginModal={openLoginModal}
           saveGame={saveGame}
           currentUser={currentUser}
+          handleUpdateUser={handleUpdateUser}
         />
       )}
     </div>
