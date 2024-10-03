@@ -91,10 +91,10 @@ export const getSavedGames = async () => {
   }
 };
 
-export const unsaveGame = async (gameData) => {
+export const unsaveGame = async (fixtureId) => {
   const token = localStorage.getItem("token");
   try {
-    const res = await fetch(`${baseUrl}/me/games/${fixturedId}`, {
+    const res = await fetch(`${baseUrl}/me/games/${fixtureId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,

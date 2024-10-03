@@ -18,6 +18,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
   const [isLoading, setIsLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Save Game");
   const [isGameSaved, setIsGameSaved] = useState(false);
+
   const hasScrolled = useRef(false);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
       const isSaved = savedGames.some(
         (savedGame) => savedGame.fixtureId === formattedGameData.fixtureId
       );
-
+      setIsGameSaved(isSaved);
       setButtonText(isSaved ? "Game Saved" : "Save Game");
     }
   }, [currentUser, game]);
@@ -140,6 +141,9 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
     setIsLoading(true);
     try {
       const formattedGameData = gameData(game, userId);
+      const fixtureId = game.fixture.id;
+      console.log("Unsave game fixtureId:", fixtureId);
+      console.log("Fixture ID (type):", fixtureId);
 
       if (!formattedGameData.fixtureId || !formattedGameData.dateTime) {
         console.error("Missing required fields in formatted game data");
@@ -148,11 +152,17 @@ function GameModal({ game, onClose, isLoggedIn, openLoginModal, currentUser }) {
       }
 
       if (isGameSaved) {
-        await unsaveGame(formattedGameData);
+        await unsaveGame(fixtureId);
         setButtonText("Save Game");
+        setIsGameSaved(false);
+        currentUser.savedGames = currentUser.savedGames.filter(
+          (savedGame) => savedGame.fixtureId !== fixtureId
+        );
       } else {
         await saveGame(formattedGameData);
         setButtonText("Game Saved");
+        setIsGameSaved(true);
+        currentUser.savedGames.push(formattedGameData);
       }
 
       setIsGameSaved((prev) => !prev);
