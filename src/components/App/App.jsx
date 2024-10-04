@@ -239,6 +239,7 @@ function App() {
                   openLoginModal={openLoginModal}
                   handleUpdateUser={handleUpdateUser}
                   currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
                 />
               }
             />
@@ -249,6 +250,7 @@ function App() {
                   savedGames={savedGames}
                   handleUpdateUser={handleUpdateUser}
                   currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
                 />
               }
             />
@@ -260,6 +262,7 @@ function App() {
                   saveGame={saveGame}
                   handleUpdateUser={handleUpdateUser}
                   currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
                 />
               }
             />

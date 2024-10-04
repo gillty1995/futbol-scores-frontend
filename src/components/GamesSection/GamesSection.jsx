@@ -12,6 +12,7 @@ function GamesSection({
   saveGame,
   handleUpdateUser,
   currentUser,
+  setCurrentUser,
 }) {
   const { teamId } = useParams();
   const [games, setGames] = useState([]);
@@ -125,6 +126,7 @@ function GamesSection({
   }, [teamId, startDate, endDate]);
 
   const handleCardClick = (game) => {
+    console.log("Game clicked:", game);
     setSelectedGame(game);
     console.log(selectedGame);
     setModalOpen(true);
@@ -203,6 +205,7 @@ function GamesSection({
           saveGame={saveGame}
           currentUser={currentUser}
           handleUpdateUser={handleUpdateUser}
+          setCurrentUser={setCurrentUser}
         />
       )}
     </div>

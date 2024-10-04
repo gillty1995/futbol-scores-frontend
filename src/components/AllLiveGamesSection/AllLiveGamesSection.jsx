@@ -11,6 +11,7 @@ function AllLiveGamesSection({
   saveGame,
   handleUpdateUser,
   currentUser,
+  setCurrentUser,
 }) {
   const [liveGames, setLiveGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,7 @@ function AllLiveGamesSection({
   }, []);
 
   const handleCardClick = (game) => {
+    console.log("Game clicked:", game);
     setSelectedGame(game);
     setModalOpen(true);
   };
@@ -138,6 +140,7 @@ function AllLiveGamesSection({
           saveGame={saveGame}
           currentUser={currentUser}
           handleUpdateUser={handleUpdateUser}
+          setCurrentUser={setCurrentUser}
         />
       )}
     </div>

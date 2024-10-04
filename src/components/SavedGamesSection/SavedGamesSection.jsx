@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
-import CurrentUserContext from "../../contexts/CurrentUserContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
 import gameData from "../../utils/gameData";
 import "./SavedGamesSection.css";
 
-function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
+function SavedGamesSection({
+  game,
+  handleUpdateUser,
+  currentUser,
+  setCurrentUser,
+}) {
   const [savedGames, setSavedGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,9 +19,36 @@ function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
-  // const currentUser = useContext(CurrentUserContext);
 
   console.log("Current user in saved games section", currentUser);
+
+  const formatDate = (date) => {
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return "";
+
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+
+    return `${month.toString().padStart(2, "0")}/${day
+      .toString()
+      .padStart(2, "0")}`;
+  };
+
+  const formatTime = (dateTime) => {
+    const dateObj = new Date(dateTime);
+    if (isNaN(dateObj.getTime())) return "";
+
+    const options = { hour: "numeric", minute: "2-digit", hour12: true };
+    return dateObj.toLocaleTimeString([], options).replace(/^0/, "");
+  };
+
+  const isLive = (dateTime) => {
+    const now = new Date();
+    const gameDate = new Date(dateTime);
+    return (
+      now >= gameDate && now <= new Date(gameDate.getTime() + 120 * 60 * 1000)
+    );
+  };
 
   useEffect(() => {
     const fetchSavedGames = async () => {
@@ -38,8 +69,39 @@ function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
         });
 
         console.log("Fetched saved games:", response.data);
+
         if (Array.isArray(response.data)) {
-          const formattedGames = response.data.map((game) => gameData(game));
+          const formattedGames = response.data.map((game) => ({
+            fixture: {
+              id: game.fixtureId,
+              date: game.dateTime,
+            },
+            league: {
+              id: null,
+              name: null,
+              logo: null,
+              country: null,
+              flag: null,
+            },
+            teams: game.teams,
+            goals: {
+              home: 0,
+              away: 0,
+            },
+            score: {
+              halftime: {
+                home: null,
+                away: null,
+              },
+              fulltime: {
+                home: null,
+                away: null,
+              },
+            },
+
+            user: game.user || "Unknown",
+          }));
+
           setSavedGames(formattedGames);
         } else {
           console.error("Expected an array but got:", response.data);
@@ -62,6 +124,7 @@ function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
   }, [isLoggedIn]);
 
   const handleCardClick = (game) => {
+    console.log("Game clicked:", game);
     setSelectedGame(game);
     setModalOpen(true);
   };
@@ -109,8 +172,16 @@ function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
               onClick={() => handleCardClick(game)}
             >
               <div className="savedgamessection__teams-date">
-                <span className="savedgamessection__date">
-                  {game.dateTime.toLocaleString() || "Date N/A"}
+                <span
+                  className={`savedgamessection__date ${
+                    isLive(game.fixture.date) ? "gamessection__live" : ""
+                  }`}
+                >
+                  {isLive(game.fixture.date)
+                    ? "LIVE"
+                    : `${formatDate(game.fixture.date)} ${formatTime(
+                        game.fixture.date
+                      )}`}
                 </span>
               </div>
               <div className="savedgamessection__teams">
@@ -149,9 +220,9 @@ function SavedGamesSection({ openLoginModal, handleUpdateUser, currentUser }) {
           game={selectedGame}
           onClose={handleCloseModal}
           isLoggedIn={isLoggedIn}
-          openLoginModal={openLoginModal}
           currentUser={currentUser}
           handleUpdateUser={handleUpdateUser}
+          setCurrentUser={setCurrentUser}
         />
       )}
     </div>

@@ -12,6 +12,7 @@ function GameModal({
   isLoggedIn,
   openLoginModal,
   currentUser,
+  setCurrentUser,
   handleUpdateUser,
 }) {
   console.log("Is user logged in?", isLoggedIn);
@@ -25,7 +26,6 @@ function GameModal({
   const [isLoading, setIsLoading] = useState(true);
   const [buttonText, setButtonText] = useState("Save Game");
   const [isGameSaved, setIsGameSaved] = useState(false);
-
   const hasScrolled = useRef(false);
 
   useEffect(() => {
@@ -162,19 +162,28 @@ function GameModal({
         await unsaveGame(fixtureId);
         setButtonText("Save Game");
         setIsGameSaved(false);
-        currentUser.savedGames = currentUser.savedGames.filter(
+        const updatedSavedGames = currentUser.savedGames.filter(
           (savedGame) => savedGame.fixtureId !== fixtureId
         );
-        handleUpdateUser({ savedGames: currentUser.savedGames });
+        setCurrentUser({
+          ...currentUser,
+          savedGames: updatedSavedGames,
+        });
+        handleUpdateUser({ savedGames: updatedSavedGames });
       } else {
         await saveGame(formattedGameData);
         setButtonText("Game Saved");
         setIsGameSaved(true);
-        currentUser.savedGames.push(formattedGameData);
-        handleUpdateUser({ savedGames: currentUser.savedGames });
+        const updatedSavedGames = [
+          ...currentUser.savedGames,
+          formattedGameData,
+        ];
+        setCurrentUser({
+          ...currentUser,
+          savedGames: updatedSavedGames,
+        });
+        handleUpdateUser({ savedGames: updatedSavedGames });
       }
-
-      // setIsGameSaved((prev) => !prev);
     } catch (error) {
       console.error("Error saving game:", error);
       setButtonText("Save Failed");
