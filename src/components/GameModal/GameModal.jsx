@@ -174,7 +174,7 @@ function GameModal({
         handleUpdateUser({ savedGames: currentUser.savedGames });
       }
 
-      setIsGameSaved((prev) => !prev);
+      // setIsGameSaved((prev) => !prev);
     } catch (error) {
       console.error("Error saving game:", error);
       setButtonText("Save Failed");
