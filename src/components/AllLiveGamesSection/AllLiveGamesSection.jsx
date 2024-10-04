@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import AuthContext from "../../contexts/AuthContext";
-// import CurrentUserContext from "../../contexts/CurrentUserContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
@@ -9,7 +8,6 @@ import "./AllLiveGamesSection.css";
 function AllLiveGamesSection({
   openLoginModal,
   saveGame,
-  handleUpdateUser,
   currentUser,
   setCurrentUser,
 }) {
@@ -20,7 +18,6 @@ function AllLiveGamesSection({
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
-  // const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
     const fetchLiveGames = async () => {
@@ -139,7 +136,6 @@ function AllLiveGamesSection({
           openLoginModal={openLoginModal}
           saveGame={saveGame}
           currentUser={currentUser}
-          handleUpdateUser={handleUpdateUser}
           setCurrentUser={setCurrentUser}
         />
       )}

@@ -13,10 +13,7 @@ function GameModal({
   openLoginModal,
   currentUser,
   setCurrentUser,
-  handleUpdateUser,
 }) {
-  console.log("Is user logged in?", isLoggedIn);
-
   const userId = currentUser?._id;
   const updatesRef = useRef(null);
   const [liveScore, setLiveScore] = useState(null);
@@ -28,24 +25,22 @@ function GameModal({
   const [isGameSaved, setIsGameSaved] = useState(false);
   const hasScrolled = useRef(false);
 
+  // check if game saved
   useEffect(() => {
     if (currentUser && game) {
-      console.log("Current User", currentUser);
-      const formattedGameData = gameData(game, currentUser);
-      const savedGames = currentUser.savedGames || [];
-
-      console.log("Saved Games", savedGames);
-
-      const isSaved = savedGames.some(
-        (savedGame) => savedGame.fixtureId === formattedGameData.fixtureId
+      const isSaved = currentUser.savedGames.some(
+        (savedGame) => String(savedGame.fixtureId) === String(game.fixture.id)
       );
+
+      console.log("Is game saved?", isSaved);
       setIsGameSaved(isSaved);
       setButtonText(isSaved ? "Game Saved" : "Save Game");
+    } else {
+      console.log("Current user or game is not defined.");
     }
   }, [currentUser, game]);
 
-  console.log("Current user in game modal", currentUser);
-
+  // fetch live game data
   const fetchLiveGameData = async () => {
     if (game) {
       setIsLoading(true);
@@ -128,14 +123,14 @@ function GameModal({
     fetchLiveGameData();
   };
 
+  // current user game data
   useEffect(() => {
     if (currentUser) {
       const data = gameData(game, currentUser);
-      console.log(data);
     }
   }, [currentUser, game]);
 
-  // Handle save game
+  // handle save game
   const handleSaveGame = async (e) => {
     e.preventDefault();
 
@@ -148,9 +143,7 @@ function GameModal({
     setIsLoading(true);
     try {
       const formattedGameData = gameData(game, userId);
-      const fixtureId = game.fixture.id;
-      console.log("Unsave game fixtureId:", fixtureId);
-      console.log("Fixture ID (type):", fixtureId);
+      const fixtureId = String(game.fixture.id);
 
       if (!formattedGameData.fixtureId || !formattedGameData.dateTime) {
         console.error("Missing required fields in formatted game data");
@@ -159,39 +152,51 @@ function GameModal({
       }
 
       if (isGameSaved) {
+        console.log("Unsaving the game:", fixtureId);
         await unsaveGame(fixtureId);
+
+        setCurrentUser((prevUser) => {
+          const updatedSavedGames = prevUser.savedGames.filter(
+            (savedGame) => savedGame.fixtureId !== fixtureId
+          );
+
+          console.log("Updated saved games after unsaving:", updatedSavedGames);
+
+          return {
+            ...prevUser,
+            savedGames: updatedSavedGames,
+          };
+        });
+
         setButtonText("Save Game");
         setIsGameSaved(false);
-        const updatedSavedGames = currentUser.savedGames.filter(
-          (savedGame) => savedGame.fixtureId !== fixtureId
-        );
-        setCurrentUser({
-          ...currentUser,
-          savedGames: updatedSavedGames,
-        });
-        handleUpdateUser({ savedGames: updatedSavedGames });
       } else {
+        console.log("Saving the game:", formattedGameData);
         await saveGame(formattedGameData);
+
+        setCurrentUser((prevUser) => {
+          const updatedSavedGames = [...prevUser.savedGames, formattedGameData];
+
+          return {
+            ...prevUser,
+            savedGames: updatedSavedGames,
+          };
+        });
+
         setButtonText("Game Saved");
         setIsGameSaved(true);
-        const updatedSavedGames = [
-          ...currentUser.savedGames,
-          formattedGameData,
-        ];
-        setCurrentUser({
-          ...currentUser,
-          savedGames: updatedSavedGames,
-        });
-        handleUpdateUser({ savedGames: updatedSavedGames });
       }
     } catch (error) {
       console.error("Error saving game:", error);
       setButtonText("Save Failed");
     } finally {
-      setIsLoading(false);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 800);
     }
   };
 
+  // live events
   const renderLiveEvents = () => {
     if (!liveEvents.length) {
       return <p className="gamemodal__no-updates">No updates yet...</p>;
@@ -234,6 +239,7 @@ function GameModal({
     );
   };
 
+  // content
   const renderContent = () => {
     if (isLoading) {
       return <Preloader className="gamemodal__preloader" />;
@@ -341,6 +347,7 @@ function GameModal({
   );
 }
 
+// format date and time
 const formatDate = (date) => {
   const dateObj = new Date(date);
   if (isNaN(dateObj.getTime())) return "";

@@ -136,13 +136,7 @@ function App() {
     setCurrentUser(null);
     setIsLoggedIn(false);
     localStorage.removeItem("jwt");
-  };
-
-  const handleUpdateUser = (updatedUserData) => {
-    setCurrentUser((prevUser) => ({
-      ...prevUser,
-      ...updatedUserData,
-    }));
+    navigate("/");
   };
 
   const openLoginModal = () => {
@@ -173,11 +167,6 @@ function App() {
     });
   };
 
-  const validateForm = (e) => {
-    const isValid = e.target.form.checkValidity();
-    setIsFormValid(isValid);
-  };
-
   const resetSearch = () => {
     setSearchQuery("");
     setSearchResults([]);
@@ -195,7 +184,6 @@ function App() {
         return updatedSavedGames;
       });
 
-      // Check if the game is saved
       const isSaved = updatedSavedGames.some(
         (savedGame) => savedGame.fixtureId === game.fixtureId
       );
@@ -237,7 +225,6 @@ function App() {
               element={
                 <AllLiveGamesSection
                   openLoginModal={openLoginModal}
-                  handleUpdateUser={handleUpdateUser}
                   currentUser={currentUser}
                   setCurrentUser={setCurrentUser}
                 />
@@ -248,7 +235,6 @@ function App() {
               element={
                 <SavedGamesSection
                   savedGames={savedGames}
-                  handleUpdateUser={handleUpdateUser}
                   currentUser={currentUser}
                   setCurrentUser={setCurrentUser}
                 />
@@ -260,7 +246,6 @@ function App() {
                 <GamesSection
                   openLoginModal={openLoginModal}
                   saveGame={saveGame}
-                  handleUpdateUser={handleUpdateUser}
                   currentUser={currentUser}
                   setCurrentUser={setCurrentUser}
                 />

@@ -3,15 +3,9 @@ import AuthContext from "../../contexts/AuthContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
-import gameData from "../../utils/gameData";
 import "./SavedGamesSection.css";
 
-function SavedGamesSection({
-  game,
-  handleUpdateUser,
-  currentUser,
-  setCurrentUser,
-}) {
+function SavedGamesSection({ game, currentUser, setCurrentUser }) {
   const [savedGames, setSavedGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,8 +13,6 @@ function SavedGamesSection({
   const [modalOpen, setModalOpen] = useState(false);
   const { isLoggedIn } = useContext(AuthContext);
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
-
-  console.log("Current user in saved games section", currentUser);
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
@@ -102,6 +94,10 @@ function SavedGamesSection({
             user: game.user || "Unknown",
           }));
 
+          formattedGames.sort(
+            (a, b) => new Date(a.fixture.date) - new Date(b.fixture.date)
+          );
+
           setSavedGames(formattedGames);
         } else {
           console.error("Expected an array but got:", response.data);
@@ -124,7 +120,6 @@ function SavedGamesSection({
   }, [isLoggedIn]);
 
   const handleCardClick = (game) => {
-    console.log("Game clicked:", game);
     setSelectedGame(game);
     setModalOpen(true);
   };
@@ -137,8 +132,6 @@ function SavedGamesSection({
   const handleShowMore = () => {
     setVisibleGamesCount((prevCount) => prevCount + 10);
   };
-
-  console.log("Saved games before rendering:", savedGames);
 
   const renderTeamLogo = (team) => {
     return team.logo ? (
@@ -167,7 +160,7 @@ function SavedGamesSection({
         {savedGames.length > 0 ? (
           savedGames.slice(0, visibleGamesCount).map((game) => (
             <li
-              key={game.fixtureId}
+              key={game.fixture.id}
               className="savedgamessection__card"
               onClick={() => handleCardClick(game)}
             >
@@ -221,7 +214,6 @@ function SavedGamesSection({
           onClose={handleCloseModal}
           isLoggedIn={isLoggedIn}
           currentUser={currentUser}
-          handleUpdateUser={handleUpdateUser}
           setCurrentUser={setCurrentUser}
         />
       )}

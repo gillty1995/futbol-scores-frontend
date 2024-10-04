@@ -1,7 +1,4 @@
 const gameData = (game, currentUser) => {
-  console.log("Current user in gameData", currentUser);
-  console.log("Fetched game object:", game);
-
   if (!game || !game.teams) {
     console.error("Invalid game object:", game);
     return null;
