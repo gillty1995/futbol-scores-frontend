@@ -158,3 +158,23 @@
   display: flex;
   justify-content: center;
 }
+
+.gamemodal__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.gamemodal__league {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  font-style: italic;
+  overflow: hidden;
+  max-width: 200px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding-right: 5px;
+}

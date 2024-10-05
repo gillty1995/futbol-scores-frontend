@@ -80,6 +80,7 @@ function GameModal({
       } finally {
         setIsLoading(false);
       }
+      console.log(game.league.name);
     }
   };
 
@@ -209,9 +210,12 @@ function GameModal({
           .reverse()
           .map((event, index) => {
             const teamName =
-              event.team.id === game.teams.home.id
+              String(event.team.id).trim() === String(game.teams.home.id).trim()
                 ? game.teams.home.name
                 : game.teams.away.name;
+
+            console.log("Event team:", event.team);
+            console.log("Game teams:", game.teams);
 
             return (
               <li key={index} className="gamemodal__event">
@@ -323,10 +327,18 @@ function GameModal({
       );
     }
   };
+  console.log("Game object in Modal:", game);
 
   return (
     <ModalWithForm
-      title="Game Details"
+      title={
+        <div className="gamemodal__title">
+          Game Details
+          {game.league && game.league.name && (
+            <span className="gamemodal__league"> {game.league.name}</span>
+          )}
+        </div>
+      }
       isOpen={!!game}
       onClose={onClose}
       onSubmit={handleSaveGame}

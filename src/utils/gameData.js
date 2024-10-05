@@ -34,6 +34,18 @@ const gameData = (game, currentUser) => {
     status: status,
     liveScore: {},
     liveEvents: [],
+    league: {
+      id: game.league
+        ? game.league.id
+          ? game.league.id.toString()
+          : "Unknown ID"
+        : "N/A",
+      name: game.league
+        ? game.league.name
+          ? game.league.name
+          : "Unknown League"
+        : "Unknown",
+    },
   };
 };
 

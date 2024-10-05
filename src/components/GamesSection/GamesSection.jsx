@@ -61,6 +61,12 @@ function GamesSection({
     );
   };
 
+  const isGameOver = (dateTime) => {
+    const now = new Date();
+    const gameEnd = new Date(new Date(dateTime).getTime() + 120 * 60 * 1000);
+    return now > gameEnd;
+  };
+
   const startDate = formatDateForAPI(today);
   const endDate = formatDateForAPI(twoWeeksFromNow);
 
@@ -159,11 +165,18 @@ function GamesSection({
                     isLive(game.fixture.date) ? "gamessection__live" : ""
                   }`}
                 >
-                  {isLive(game.fixture.date)
-                    ? "LIVE"
-                    : `${formatDate(game.fixture.date)} ${formatTime(
-                        game.fixture.date
-                      )}`}
+                  {isLive(game.fixture.date) ? (
+                    "LIVE"
+                  ) : isGameOver(game.fixture.date) ? (
+                    <>
+                      {formatDate(game.fixture.date)}{" "}
+                      <span className="gamessection__final">FINAL</span>
+                    </>
+                  ) : (
+                    `${formatDate(game.fixture.date)} ${formatTime(
+                      game.fixture.date
+                    )}`
+                  )}
                 </span>
               </div>
               <div className="gamessection__teams">

@@ -42,6 +42,12 @@ function SavedGamesSection({ game, currentUser, setCurrentUser }) {
     );
   };
 
+  const isGameOver = (dateTime) => {
+    const now = new Date();
+    const gameEnd = new Date(new Date(dateTime).getTime() + 120 * 60 * 1000);
+    return now > gameEnd;
+  };
+
   useEffect(() => {
     const fetchSavedGames = async () => {
       setLoading(true);
@@ -69,11 +75,11 @@ function SavedGamesSection({ game, currentUser, setCurrentUser }) {
               date: game.dateTime,
             },
             league: {
-              id: null,
-              name: null,
-              logo: null,
-              country: null,
-              flag: null,
+              id: game.league?.id || null,
+              name: game.league?.name || null,
+              logo: game.league?.logo || null,
+              country: game.league?.country || null,
+              flag: game.league?.flag || null,
             },
             teams: game.teams,
             goals: {
@@ -167,14 +173,21 @@ function SavedGamesSection({ game, currentUser, setCurrentUser }) {
               <div className="savedgamessection__teams-date">
                 <span
                   className={`savedgamessection__date ${
-                    isLive(game.fixture.date) ? "gamessection__live" : ""
+                    isLive(game.fixture.date) ? "savedgamessection__live" : ""
                   }`}
                 >
-                  {isLive(game.fixture.date)
-                    ? "LIVE"
-                    : `${formatDate(game.fixture.date)} ${formatTime(
-                        game.fixture.date
-                      )}`}
+                  {isLive(game.fixture.date) ? (
+                    "LIVE"
+                  ) : isGameOver(game.fixture.date) ? (
+                    <>
+                      {formatDate(game.fixture.date)}{" "}
+                      <span className="savedgamessection__final">FINAL</span>
+                    </>
+                  ) : (
+                    `${formatDate(game.fixture.date)} ${formatTime(
+                      game.fixture.date
+                    )}`
+                  )}
                 </span>
               </div>
               <div className="savedgamessection__teams">
