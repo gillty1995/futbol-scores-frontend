@@ -228,7 +228,7 @@ function GameModal({
                   {event.type === "Card" &&
                     `🟨 ${event.detail} card for ${event.player.name} (${teamName})`}
                   {event.type === "subst" &&
-                    `🔄 Substitution: ${event.assist.name} replaced ${event.player.name} (${teamName})`}
+                    `🔄 Substitution: ${event.assist.name} replaced by ${event.player.name} (${teamName})`}
                   {event.type === "Offside" &&
                     `🚫 ${event.player.name} is offside! (${teamName})`}
                   {event.type === "Foul" &&

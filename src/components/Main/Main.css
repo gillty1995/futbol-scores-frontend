@@ -26,6 +26,9 @@
   line-height: 24px;
   color: rgba(255, 255, 255, 1);
   z-index: 3;
+  align-self: center;
+  padding: 0 30px;
+  text-align: center;
 }
 
 .main__info {
@@ -104,4 +107,39 @@
   color: red;
   margin-top: 10px;
   z-index: 15;
+}
+
+@media screen and (max-width: 768px) {
+  .main__info {
+    max-width: 500px;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .main__header {
+    margin: 80px 0 15px;
+    padding: 0 15px;
+    text-align: center;
+  }
+  .main__search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .main__search-input {
+    width: 100%;
+    height: 48px;
+    margin-bottom: 10px;
+    max-width: 300px;
+    align-self: center;
+    padding: 0 0 0 20px;
+  }
+
+  .main__search-btn {
+    width: 100%;
+    height: 48px;
+    position: static;
+    max-width: 300px;
+    align-self: center;
+  }
 }

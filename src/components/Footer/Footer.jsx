@@ -4,7 +4,7 @@ function Footer() {
   return (
     <footer className="footer">
       <p className="footer__info">
-        &copy; 2024 Developed by Gill Hermelin, powered by{" "}
+        &copy; 2024 Gill Hermelin, Powered by{" "}
         <a
           href="https://www.api-football.com/"
           target="_blank"
