@@ -26,7 +26,12 @@ function Header({
     <header className="header">
       <h1 className="header__logo">FutbolScores</h1>
 
-      <button className="header__menu-icon" onClick={toggleMenu}>
+      <button
+        className={`header__menu-icon ${
+          isMenuOpen ? "header__menu-icon_open" : ""
+        }`}
+        onClick={toggleMenu}
+      >
         <img
           src={isMenuOpen ? closeIcon : menuIcon}
           alt="Menu"

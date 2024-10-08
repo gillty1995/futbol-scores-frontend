@@ -5,6 +5,7 @@
   padding: 0;
   box-sizing: border-box;
   position: relative;
+  background: rgba(245, 246, 247, 1);
 }
 
 .page__content {
@@ -21,7 +22,7 @@
   max-height: max-content;
 }
 
-.page__content::before {
+.page__background-image::before {
   content: "";
   position: absolute;
   top: 0;

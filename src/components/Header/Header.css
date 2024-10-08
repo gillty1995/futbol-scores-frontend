@@ -162,11 +162,32 @@
   }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 840px) {
+  .header {
+    padding: 0 40px 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .header__nav {
+    width: auto;
+  }
+  .header__menu-icon {
+    padding: 0 10px 0 0;
+  }
+
+  .header__menu-icon_open {
+    padding: 0 3px 0 0;
+  }
+}
+
+@media screen and (max-width: 625px) {
   .header {
     padding: 0 0 0 15px;
   }
+}
 
+@media screen and (max-width: 430px) {
   .header__signout,
   .header__signin {
     display: flex;

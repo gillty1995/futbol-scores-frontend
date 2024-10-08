@@ -7,6 +7,7 @@
   background-repeat: no-repeat;
   margin: 0;
   padding: 0;
+  margin-bottom: -1px;
 }
 
 .main__header {
@@ -115,7 +116,7 @@
   }
 }
 
-@media screen and (max-width: 320px) {
+@media screen and (max-width: 430px) {
   .main__header {
     margin: 80px 0 15px;
     padding: 0 15px;

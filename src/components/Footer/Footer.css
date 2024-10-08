@@ -1,7 +1,7 @@
 .footer {
   background: rgba(245, 246, 247, 1);
   z-index: 5;
-  position: sticky;
+  position: relative;
   margin: 0 auto;
   padding: 25px;
   min-height: auto;

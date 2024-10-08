@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./ModalWithForm.css";
 
 function ModalWithForm({
@@ -12,6 +12,8 @@ function ModalWithForm({
   extraAction,
   isLoading,
 }) {
+  const [startY, setStartY] = useState(0);
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -34,12 +36,28 @@ function ModalWithForm({
     }
   };
 
+  const handleTouchStart = (e) => {
+    setStartY(e.touches[0].clientY);
+  };
+
+  const handleTouchMove = (e) => {
+    const currentY = e.touches[0].clientY;
+    const diffY = currentY - startY;
+
+    if (diffY > 50) {
+      onClose();
+    }
+  };
+
   return (
     <div
       className={`modal ${isOpen && "modal_opened"}`}
       onClick={handleOverlayClick}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
     >
       <div className="modal__content">
+        <div className="modal__swipe-line" onClick={onClose}></div>
         <h2 className="modal__title">{title}</h2>
         <button
           onClick={onClose}

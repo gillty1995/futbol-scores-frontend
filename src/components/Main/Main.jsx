@@ -31,6 +31,12 @@ function Main({
     setSearchResults([]);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearchClick();
+    }
+  };
+
   return (
     <main className="main">
       <h2 className="main__header">What's the score?</h2>
@@ -46,6 +52,7 @@ function Main({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onClick={handleInputClick}
+          onKeyDown={handleKeyDown}
         />
         <button
           onClick={handleSearchClick}
