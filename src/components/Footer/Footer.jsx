@@ -39,7 +39,7 @@ function Footer() {
           Contact
         </button>
         <a
-          href="https://github.com/gillty1995/futbol-scores-frontend/tree/main"
+          href="https://github.com/gillty1995"
           target="_blank"
           rel="noopener noreferrer"
           className="footer__button-github"

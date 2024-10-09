@@ -243,7 +243,7 @@ function GameModal({
     );
   };
 
-  // content
+  // game content
   const renderContent = () => {
     if (isLoading) {
       return <Preloader className="gamemodal__preloader" />;
