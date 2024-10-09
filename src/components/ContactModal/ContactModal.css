@@ -1,0 +1,51 @@
+.contact__modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.contact__modal-text {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.contact__modal-name {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  border: none;
+  border-bottom: 1px solid grey;
+}
+
+.contact__modal-email {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  border: none;
+  border-bottom: 1px solid grey;
+}
+
+.contact__modal-message {
+  font-family: "Inter";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  height: 80px;
+  margin: 15px 0 0;
+  padding: 10px 0 0 10px;
+}
+
+.contact__modal-info {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.contact__modal-preloader {
+  position: absolute;
+}

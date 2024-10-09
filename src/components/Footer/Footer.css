@@ -1,6 +1,5 @@
 .footer {
   background: rgba(245, 246, 247, 1);
-  z-index: 5;
   position: relative;
   margin: 0 auto;
   padding: 25px;
@@ -9,6 +8,8 @@
   box-sizing: border-box;
   box-shadow: none;
   border: none;
+  display: flex;
+  justify-content: space-between;
 }
 
 .footer__info {
@@ -30,8 +31,40 @@
   transition: 1.5s ease;
 }
 
+.footer__button {
+  border: none;
+  background: transparent;
+  font-family: "PT Sans Narrow";
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  color: rgba(26, 27, 34, 1);
+  cursor: pointer;
+  transition: 1s ease;
+}
+
+.footer__button:hover {
+  opacity: 50%;
+}
+
+.footer__buttons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
 @media screen and (max-width: 768px) {
   .footer__info {
     font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .footer__info {
+    max-width: 150px;
+  }
+
+  .footer__buttons {
+    gap: 5px;
   }
 }

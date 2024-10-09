@@ -10,10 +10,10 @@ function Main({
   loading,
   error,
   setSearchResults,
-  openLoginModal,
 }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [searchDisabled, setSearchDisabled] = useState(false);
+  const [searchInitiated, setSearchInitiated] = useState(false);
 
   const handleSearchClick = () => {
     if (!searchQuery.trim()) {
@@ -22,6 +22,7 @@ function Main({
       setErrorMessage("");
       handleSearch();
       setSearchDisabled(true);
+      setSearchInitiated(true);
     }
   };
 
@@ -29,6 +30,7 @@ function Main({
     setSearchQuery("");
     setSearchDisabled(false);
     setSearchResults([]);
+    setSearchInitiated(false);
   };
 
   const handleKeyDown = (e) => {
@@ -68,6 +70,7 @@ function Main({
         loading={loading}
         error={error}
         searchResults={searchResults}
+        searchInitiated={searchInitiated}
       />
     </main>
   );

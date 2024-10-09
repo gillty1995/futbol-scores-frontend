@@ -17,6 +17,7 @@ import SavedGamesSection from "../SavedGamesSection/SavedGamesSection";
 import Footer from "../Footer/Footer";
 import LoginModal from "../LoginModal/LoginModal";
 import RegisterModal from "../RegisterModal/RegisterModal";
+import ContactModal from "../ContactModal/ContactModal";
 import GamesSection from "../GamesSection/GamesSection";
 import AllLiveGamesSection from "../AllLiveGamesSection/AllLiveGamesSection";
 
@@ -27,6 +28,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { login, logout } = useContext(AuthContext);
@@ -155,6 +157,10 @@ function App() {
     setIsRegisterModalOpen(false);
   };
 
+  const closeContactModal = () => {
+    setIsContactModalOpen(false);
+  };
+
   const handleLoginSubmit = (formData) => {
     return handleLogin({ email: formData.email, password: formData.password });
   };
@@ -268,6 +274,7 @@ function App() {
           isFormValid={isFormValid}
           openLoginModal={openLoginModal}
         />
+        <ContactModal onClose={closeContactModal} />
       </div>
     </CurrentUserContext.Provider>
   );

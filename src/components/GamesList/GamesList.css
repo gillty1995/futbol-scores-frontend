@@ -1,7 +1,7 @@
 .gameslist {
   background: rgba(245, 246, 247, 1);
   width: 100%;
-  z-index: 10;
+  z-index: 5;
   padding-bottom: 80px;
   margin: 0;
 }
@@ -83,4 +83,20 @@
 .gameslist__show-more:hover {
   background: rgba(232, 232, 232, 1);
   transition: 1s ease;
+}
+
+.gameslist__no-results-text {
+  font-family: "Roboto Slab";
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 30px;
+  color: rgba(26, 27, 34, 1);
+}
+
+.gameslist__no-results-description {
+  font-family: "Inter";
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 24px;
+  color: rgba(182, 188, 191, 1);
 }
