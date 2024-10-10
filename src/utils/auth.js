@@ -1,6 +1,9 @@
 import { processServerRequest } from "./utils";
 
-const baseUrl = "http://localhost:3002";
+const baseUrl =
+  process.env.VITE_NODE_ENV === "production"
+    ? "https://api.futbolsc.fr.to"
+    : "http://localhost:3002";
 
 export const registUser = async ({ email, password, name }) => {
   try {
