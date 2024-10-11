@@ -58,6 +58,8 @@ function Main({
           onChange={(e) => setSearchQuery(e.target.value)}
           onClick={handleInputClick}
           onKeyDown={handleKeyDown}
+          inputMode="text"
+          pattern=".*"
         />
         <button
           onClick={handleSearchClick}

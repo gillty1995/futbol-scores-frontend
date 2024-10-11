@@ -15,12 +15,7 @@ function ModalWithForm({
   const [startY, setStartY] = useState(0);
 
   useEffect(() => {
-    if (!isOpen) {
-      document.body.style.overflow = "auto";
-      return;
-    }
-
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
 
     const handleEscapeClose = (e) => {
       if (e.key === "Escape") {
@@ -60,6 +55,8 @@ function ModalWithForm({
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal_opened")) {
       onClose();
+
+      document.body.style.overflow = "auto";
     }
   };
 
