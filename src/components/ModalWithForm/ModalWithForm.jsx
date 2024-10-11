@@ -15,7 +15,12 @@ function ModalWithForm({
   const [startY, setStartY] = useState(0);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) {
+      document.body.style.overflow = "auto";
+      return;
+    }
+
+    document.body.style.overflow = "hidden";
 
     const handleEscapeClose = (e) => {
       if (e.key === "Escape") {
@@ -25,14 +30,16 @@ function ModalWithForm({
 
     const handleTouchStart = (e) => {
       setStartY(e.touches[0].clientY);
+      e.stopPropagation();
     };
 
     const handleTouchMove = (e) => {
       const currentY = e.touches[0].clientY;
       const diffY = currentY - startY;
 
-      if (diffY > 50) {
+      if (diffY > 250) {
         e.preventDefault();
+        e.stopPropagation();
         onClose();
       }
     };

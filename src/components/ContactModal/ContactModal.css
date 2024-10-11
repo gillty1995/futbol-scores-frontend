@@ -20,6 +20,7 @@
   border: none;
   border-bottom: 1px solid grey;
   border-radius: 0;
+  max-width: 120px;
 }
 
 .contact__modal-email {
@@ -44,7 +45,6 @@
 
 .contact__modal-info {
   display: flex;
-  justify-content: flex-start;
   gap: 20px;
 }
 

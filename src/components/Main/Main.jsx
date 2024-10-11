@@ -14,6 +14,7 @@ function Main({
   const [errorMessage, setErrorMessage] = useState("");
   const [searchDisabled, setSearchDisabled] = useState(false);
   const [searchInitiated, setSearchInitiated] = useState(false);
+  const inputRef = React.useRef(null);
 
   const handleSearchClick = () => {
     if (!searchQuery.trim()) {
@@ -23,6 +24,8 @@ function Main({
       handleSearch();
       setSearchDisabled(true);
       setSearchInitiated(true);
+      inputRef.current.blur();
+      window.scrollTo(0, 0);
     }
   };
 
