@@ -50,7 +50,6 @@
 .footer__buttons {
   display: flex;
   align-items: center;
-  gap: 20px;
 }
 
 @media screen and (max-width: 768px) {
@@ -62,9 +61,5 @@
 @media screen and (max-width: 430px) {
   .footer__info {
     max-width: 150px;
-  }
-
-  .footer__buttons {
-    gap: 0;
   }
 }

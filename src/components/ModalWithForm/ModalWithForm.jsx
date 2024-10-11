@@ -23,12 +23,32 @@ function ModalWithForm({
       }
     };
 
+    const handleTouchStart = (e) => {
+      setStartY(e.touches[0].clientY);
+    };
+
+    const handleTouchMove = (e) => {
+      const currentY = e.touches[0].clientY;
+      const diffY = currentY - startY;
+
+      if (diffY > 50) {
+        e.preventDefault();
+        onClose();
+      }
+    };
+
     document.addEventListener("keydown", handleEscapeClose);
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
 
     return () => {
       document.removeEventListener("keydown", handleEscapeClose);
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, startY]);
 
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal_opened")) {
@@ -36,26 +56,10 @@ function ModalWithForm({
     }
   };
 
-  const handleTouchStart = (e) => {
-    setStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchMove = (e) => {
-    const currentY = e.touches[0].clientY;
-    const diffY = currentY - startY;
-
-    if (diffY > 50) {
-      e.preventDefault();
-      onClose();
-    }
-  };
-
   return (
     <div
-      className={`modal ${isOpen && "modal_opened"}`}
+      className={`modal ${isOpen ? "modal_opened" : ""}`}
       onClick={handleOverlayClick}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
     >
       <div className="modal__content">
         <div className="modal__swipe-line" onClick={onClose}></div>
@@ -68,7 +72,6 @@ function ModalWithForm({
         <form className="modal__form" onSubmit={onSubmit}>
           {children}
           <button
-            onSubmit={onSubmit}
             type="submit"
             className={`modal__submit ${
               isLoading ? "modal__submit_hidden" : ""
