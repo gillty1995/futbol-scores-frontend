@@ -10,7 +10,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "start:backend": "json-server --watch db.json --port 3001",
-    "start": "npm run start:backend"
+    "start": "npm run start:backend",
+    "deploy": "npm run build && scp -r ./dist/* yehsavvygill@futbolsc.fr.to:/home/yehsavvygill/frontend"
   },
   "dependencies": {
     "axios": "^1.7.7",

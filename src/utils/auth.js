@@ -1,7 +1,7 @@
 import { processServerRequest } from "./utils";
 
 const baseUrl =
-  process.env.VITE_NODE_ENV === "production"
+  import.meta.env.VITE_NODE_ENV === "production"
     ? "https://api.futbolsc.fr.to"
     : "http://localhost:3002";
 

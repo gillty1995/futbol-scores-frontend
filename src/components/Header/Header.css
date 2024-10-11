@@ -23,6 +23,7 @@
   color: rgba(255, 255, 255, 1);
   font-family: "Playwrite NZ";
   z-index: 1005;
+  padding-top: 5px;
 }
 
 .header__nav {
@@ -32,6 +33,7 @@
   margin: 0;
   padding: 0;
   z-index: 4;
+  padding-top: 5px;
 }
 
 .header__link {
@@ -159,6 +161,7 @@
 
   .header__link_mobile {
     margin: 0;
+    font-size: 60px;
   }
 }
 
@@ -171,13 +174,15 @@
 @media screen and (max-width: 768px) {
   .header__nav {
     width: auto;
+    gap: 40px;
+    padding-top: 40px;
   }
   .header__menu-icon {
-    padding: 0 10px 0 0;
+    padding: 0 20px 0 0;
   }
 
   .header__menu-icon_open {
-    padding: 0 3px 0 0;
+    padding: 0 13px 0 0;
   }
 }
 

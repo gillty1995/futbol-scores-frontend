@@ -75,6 +75,7 @@
   display: block;
   border: none;
   border-bottom: 1px solid grey;
+  border-radius: 0;
   width: 100%;
   padding: 8px 0 0;
   cursor: pointer;
@@ -86,6 +87,11 @@
   opacity: 50%;
   color: rgba(0, 0, 0, 1);
   transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+input,
+textarea {
+  border-radius: 0;
 }
 
 .modal__input:focus {

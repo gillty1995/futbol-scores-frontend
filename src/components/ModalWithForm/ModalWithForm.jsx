@@ -45,6 +45,7 @@ function ModalWithForm({
     const diffY = currentY - startY;
 
     if (diffY > 50) {
+      e.preventDefault();
       onClose();
     }
   };

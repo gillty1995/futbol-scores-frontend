@@ -48,7 +48,9 @@ function Header({
               closeMenu();
             }}
             className={({ isActive }) =>
-              isActive ? "header__link header__link_active" : "header__link"
+              isActive
+                ? "header__link header__link_active header__link_mobile"
+                : "header__link header__link_mobile"
             }
           >
             Home

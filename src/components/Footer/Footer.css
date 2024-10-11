@@ -65,6 +65,6 @@
   }
 
   .footer__buttons {
-    gap: 5px;
+    gap: 0;
   }
 }
