@@ -1,9 +1,10 @@
 import { processServerRequest } from "./utils";
 
-const baseUrl =
-  import.meta.env.VITE_NODE_ENV === "production"
-    ? "https://api.futbolsc.fr.to"
-    : "http://localhost:3002";
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3002";
+
+if (import.meta.env.NODE_ENV === "production") {
+  console.log("Running in production mode");
+}
 
 export const registUser = async ({ email, password, name }) => {
   try {
