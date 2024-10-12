@@ -1,6 +1,7 @@
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import { useEffect, useState } from "react";
 import Preloader from "../Preloader/Preloader";
+import { baseUrl } from "../../utils/constants";
 import "./ContactModal.css";
 
 function ContactModal({ isOpen, onClose }) {
@@ -33,7 +34,7 @@ function ContactModal({ isOpen, onClose }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:3002/contact", {
+      const response = await fetch(`${baseUrl}/me/games`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

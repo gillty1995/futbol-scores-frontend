@@ -3,6 +3,7 @@ import AuthContext from "../../contexts/AuthContext";
 import axios from "axios";
 import GameModal from "../GameModal/GameModal";
 import Preloader from "../Preloader/Preloader";
+import { baseUrl } from "../../utils/constants";
 import "./SavedGamesSection.css";
 
 function SavedGamesSection({ game, currentUser, setCurrentUser }) {
@@ -60,7 +61,7 @@ function SavedGamesSection({ game, currentUser, setCurrentUser }) {
 
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:3002/me/games", {
+        const response = await axios.get(`${baseUrl}/me/games`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
