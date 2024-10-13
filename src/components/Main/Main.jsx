@@ -52,6 +52,7 @@ function Main({
       <div className="main__search">
         <input
           type="text"
+          ref={inputRef}
           className="main__search-input"
           placeholder="Enter football club or country"
           value={searchQuery}

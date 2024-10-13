@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import "./ModalWithForm.css";
 
 function ModalWithForm({
@@ -12,51 +12,52 @@ function ModalWithForm({
   extraAction,
   isLoading,
 }) {
-  const [startY, setStartY] = useState(0);
+  const startY = useRef(0);
+  const threshold = 100;
+
+  const handleTouchStart = (e) => {
+    startY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    const currentY = e.touches[0].clientY;
+    const diffY = currentY - startY.current;
+
+    if (diffY > threshold) {
+      console.log("Swipe down detected");
+      onClose();
+    }
+  };
 
   useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
 
-    const handleEscapeClose = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
+      document.addEventListener("keydown", handleEscapeClose);
+      document.addEventListener("touchstart", handleTouchStart, {
+        passive: false,
+      });
+      document.addEventListener("touchmove", handleTouchMove, {
+        passive: false,
+      });
 
-    const handleTouchStart = (e) => {
-      setStartY(e.touches[0].clientY);
-      e.stopPropagation();
-    };
+      return () => {
+        document.body.style.overflow = "auto";
+        document.removeEventListener("keydown", handleEscapeClose);
+        document.removeEventListener("touchstart", handleTouchStart);
+        document.removeEventListener("touchmove", handleTouchMove);
+      };
+    }
+  }, [isOpen, onClose]);
 
-    const handleTouchMove = (e) => {
-      const currentY = e.touches[0].clientY;
-      const diffY = currentY - startY;
-
-      if (diffY > 250) {
-        e.preventDefault();
-        e.stopPropagation();
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscapeClose);
-    document.addEventListener("touchstart", handleTouchStart, {
-      passive: false,
-    });
-    document.addEventListener("touchmove", handleTouchMove, { passive: false });
-
-    return () => {
-      document.removeEventListener("keydown", handleEscapeClose);
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, [isOpen, onClose, startY]);
+  const handleEscapeClose = (e) => {
+    if (e.key === "Escape") onClose();
+  };
 
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains("modal_opened")) {
       onClose();
-
-      document.body.style.overflow = "auto";
     }
   };
 

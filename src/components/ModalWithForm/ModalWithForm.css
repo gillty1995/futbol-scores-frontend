@@ -10,6 +10,9 @@
   align-items: center;
   visibility: hidden;
   z-index: 999;
+  overflow: hidden;
+  touch-action: none;
+  pointer-events: auto;
 }
 
 .modal_opened {
@@ -25,6 +28,7 @@
   width: 100%;
   border-radius: 20px;
   overflow: visible;
+  pointer-events: auto;
 }
 
 .modal__close {
@@ -218,5 +222,9 @@ textarea {
     border-radius: 3px;
     margin: -12px auto 16px;
     cursor: pointer;
+  }
+
+  .modal__close {
+    visibility: hidden;
   }
 }

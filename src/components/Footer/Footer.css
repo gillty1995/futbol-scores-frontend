@@ -41,6 +41,7 @@
   color: rgba(26, 27, 34, 1);
   cursor: pointer;
   transition: 1s ease;
+  padding: 4px;
 }
 
 .footer__button:hover {
