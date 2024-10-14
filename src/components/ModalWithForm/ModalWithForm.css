@@ -228,3 +228,14 @@ textarea {
     visibility: hidden;
   }
 }
+
+@media screen and (max-width: 375px) {
+  .modal__content {
+    max-height: 100vh;
+    padding-bottom: 15px;
+  }
+
+  .modal__alternate-action {
+    margin-top: -15px;
+  }
+}
