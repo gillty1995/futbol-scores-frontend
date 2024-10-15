@@ -1,3 +1,9 @@
+**NOTE FOR CODE REVIEWER**
+
+I made the mistake of merging my stage-react-api devolpment branch with my main branch before realizing that would mess up the submission process for Sprint 16. I aplogize for being hasty. My main branch and stage-react-api branch are identical aside from this readme update. If that is an issue please let me know how to approrpriately submit my assignment or I will reach out to a tutor for guidance.
+
+My site is deployed through google cloud. The frontend code should work in dev mode too.
+
 **Overview**
 
 - Links
