@@ -88,19 +88,17 @@ function GameModal({
     fetchLiveGameData();
   }, [game]);
 
-  // Smooth scroll effect
-  useEffect(() => {
-    if (updatesRef.current && !hasScrolled.current) {
-      hasScrolled.current = true;
+  // smooth scroll effect
+  const startSmoothScroll = (speedMultiplier = 1) => {
+    if (updatesRef.current) {
       const updatesList = updatesRef.current;
-      const scrollDuration = 5000;
+      const scrollDuration = 5000 * speedMultiplier;
       const totalScrollHeight = updatesList.scrollHeight;
       const startTime = performance.now();
 
       const scrollDown = (currentTime) => {
         const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / scrollDuration, 1);
-
         updatesList.scrollTop = totalScrollHeight * progress;
 
         if (progress < 1) {
@@ -117,7 +115,20 @@ function GameModal({
 
       requestAnimationFrame(scrollDown);
     }
+  };
+
+  // initial smooth scroll on mount
+  useEffect(() => {
+    if (!hasScrolled.current) {
+      hasScrolled.current = true;
+      startSmoothScroll();
+    }
   }, [liveEvents]);
+
+  // restart smooth scroll effect
+  const handleLiveEventsClick = () => {
+    startSmoothScroll(2);
+  };
 
   // handle refresh game
   const handleRefresh = () => {
@@ -204,7 +215,11 @@ function GameModal({
     }
 
     return (
-      <ul className="gamemodal__event-list" ref={updatesRef}>
+      <ul
+        className="gamemodal__event-list"
+        ref={updatesRef}
+        onClick={handleLiveEventsClick}
+      >
         {liveEvents
           .slice()
           .reverse()

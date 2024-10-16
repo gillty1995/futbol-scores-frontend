@@ -1,9 +1,3 @@
-**NOTE FOR CODE REVIEWER**
-
-I made the mistake of merging my stage-react-api devolpment branch with my main branch before realizing that would mess up the submission process for Sprint 16. I aplogize for being hasty. My main branch and stage-react-api branch are identical aside from this readme update. If that is an issue please let me know how to approrpriately submit my assignment or I will reach out to a tutor for guidance.
-
-My site is deployed through google cloud. The frontend code should work in dev mode too.
-
 **Overview**
 
 - Links
@@ -50,7 +44,9 @@ This project is a football-themed web application that allows users to search fo
     •	API Integration:
     •	Football Data: The app integrates with RapidAPI’s Football API to allow users to search for football teams, view live matches, and explore team details.
     •	Protected Routes: Routes like the “Saved Games” section are only accessible to logged-in users.
-    •	Error Handling: The app implements error handling for API requests and user actions. For example, users will receive feedback if their login fails, or if their search query returns no results from the football API.
+    •	Error Handling: The app implements error handling for API requests and user actions. For example, users will receive feedback if their login fails, or if their search
+    query returns no results from the football API.
+    •   Images are optimized using https://tinypng.com/.
 
 **Video**
 

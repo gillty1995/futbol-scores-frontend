@@ -70,7 +70,7 @@
 }
 
 .alllivegamessection__teams {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 500;
@@ -87,14 +87,14 @@
 .alllivegamessection__vs {
   font-weight: bold;
   color: rgba(0, 0, 0, 0.9);
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 400;
 }
 
 .alllivegamessection__teams-date {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 400;
@@ -104,7 +104,7 @@
 }
 
 .alllivegamessection__teams-name {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 500;
@@ -152,7 +152,7 @@
   border-radius: 50px;
   border: none;
   background: rgba(255, 255, 255, 1);
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-weight: 500;
   font-size: 18px;
   line-height: 24px;
