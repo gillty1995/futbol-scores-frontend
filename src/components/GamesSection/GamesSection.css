@@ -73,7 +73,7 @@
 }
 
 .gamessection__teams {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 500;
@@ -90,14 +90,14 @@
 .gamessection__vs {
   font-weight: bold;
   color: rgba(0, 0, 0, 0.9);
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 400;
 }
 
 .gamessection__teams-date {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   font-weight: 400;
@@ -161,7 +161,7 @@
   color: rgb(0, 0, 0);
   font-weight: bold;
   text-transform: uppercase;
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
 }

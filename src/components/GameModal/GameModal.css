@@ -1,5 +1,5 @@
 .gamemodal__teams {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-weight: 400;
   font-size: 20px;
   line-height: 28px;
@@ -10,7 +10,7 @@
 .gamemodal__date {
   display: flex;
   justify-content: center;
-  font-family: "Inter";
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 18px;
   line-height: 28px;
@@ -21,7 +21,7 @@
 .gamemodal__score {
   display: flex;
   justify-content: center;
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-weight: bold;
   font-size: 60px;
   line-height: 1;
@@ -34,7 +34,7 @@
 }
 
 .gamemodal__time {
-  font-family: "Inter";
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: bold;
   font-size: 14px;
   line-height: 20px;
@@ -50,14 +50,14 @@
 }
 
 .gamemodal__updates {
-  font-family: "Inter";
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 20px;
 }
 
 .gamemodal__updates-header {
-  font-family: "Inter";
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
@@ -87,7 +87,7 @@
   color: rgb(0, 0, 0);
   font-weight: bold;
   text-transform: uppercase;
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   align-self: center;
@@ -102,7 +102,7 @@
   font-weight: bold;
   text-transform: uppercase;
   animation: blink 2.5s infinite ease-in-out;
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   align-self: center;
@@ -134,7 +134,7 @@
   font-weight: bold;
   text-transform: uppercase;
   animation: blink 2.5s infinite ease-in-out;
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   align-self: center;
@@ -149,7 +149,7 @@
   font-weight: bold;
   text-transform: uppercase;
   animation: blink 2.5s infinite ease-in-out;
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 18px;
   line-height: 24px;
   align-self: center;
@@ -166,7 +166,7 @@
 }
 
 .gamemodal__league {
-  font-family: "Inter";
+  font-family: "Inter", "Arial", sans-serif;
   font-weight: 400;
   font-size: 20px;
   line-height: 28px;

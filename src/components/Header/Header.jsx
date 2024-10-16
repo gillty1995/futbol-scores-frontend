@@ -49,8 +49,8 @@ function Header({
             }}
             className={({ isActive }) =>
               isActive
-                ? "header__link header__link_active header__link_mobile"
-                : "header__link header__link_mobile"
+                ? "header__link header__link_active header__link_type_mobile"
+                : "header__link header__link_type_mobile"
             }
           >
             Home
@@ -61,8 +61,8 @@ function Header({
           onClick={closeMenu}
           className={({ isActive }) =>
             isActive
-              ? "header__link header__link_active header__link_mobile"
-              : "header__link header__link_mobile"
+              ? "header__link header__link_active header__link_type_mobile"
+              : "header__link header__link_type_mobile"
           }
         >
           Live Now
@@ -74,8 +74,8 @@ function Header({
               onClick={closeMenu}
               className={({ isActive }) =>
                 isActive
-                  ? "header__link header__link_active header__link_mobile"
-                  : "header__link header__link_mobile"
+                  ? "header__link header__link_active header__link_type_mobile"
+                  : "header__link header__link_type_mobile"
               }
             >
               Saved Games

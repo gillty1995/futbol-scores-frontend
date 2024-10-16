@@ -44,7 +44,9 @@ This project is a football-themed web application that allows users to search fo
     •	API Integration:
     •	Football Data: The app integrates with RapidAPI’s Football API to allow users to search for football teams, view live matches, and explore team details.
     •	Protected Routes: Routes like the “Saved Games” section are only accessible to logged-in users.
-    •	Error Handling: The app implements error handling for API requests and user actions. For example, users will receive feedback if their login fails, or if their search query returns no results from the football API.
+    •	Error Handling: The app implements error handling for API requests and user actions. For example, users will receive feedback if their login fails, or if their search
+    query returns no results from the football API.
+    •   Images are optimized using https://tinypng.com/.
 
 **Video**
 

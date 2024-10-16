@@ -13,7 +13,7 @@
 }
 
 .footer__info {
-  font-family: "Roboto";
+  font-family: "Roboto", "Arial", sans-serif;
   font-size: 15px;
   font-weight: 400;
   line-height: 22px;
@@ -34,7 +34,7 @@
 .footer__button {
   border: none;
   background: transparent;
-  font-family: "PT Sans Narrow";
+  font-family: "PT Sans Narrow", "Arial", sans-serif;
   font-size: 18px;
   font-weight: 400;
   line-height: 24px;
