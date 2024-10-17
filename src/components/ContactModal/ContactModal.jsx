@@ -34,7 +34,7 @@ function ContactModal({ isOpen, onClose }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${baseUrl}/me/games`, {
+      const response = await fetch(`${baseUrl}/contact`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
