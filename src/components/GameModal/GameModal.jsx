@@ -232,6 +232,9 @@ function GameModal({
             console.log("Event team:", event.team);
             console.log("Game teams:", game.teams);
 
+            // determine yellow or red card emoji
+            const cardEmoji = event.detail === "Yellow Card" ? "🟨" : "🟥";
+
             return (
               <li key={index} className="gamemodal__event">
                 <span className="gamemodal__event-time">
@@ -241,7 +244,7 @@ function GameModal({
                   {event.type === "Goal" &&
                     `⚽ ${event.detail} by ${event.player.name} (${teamName})`}
                   {event.type === "Card" &&
-                    `🟨 ${event.detail} card for ${event.player.name} (${teamName})`}
+                    `${cardEmoji} ${event.detail} for ${event.player.name} (${teamName})`}
                   {event.type === "subst" &&
                     `🔄 Substitution: ${event.assist.name} replaced by ${event.player.name} (${teamName})`}
                   {event.type === "Offside" &&
