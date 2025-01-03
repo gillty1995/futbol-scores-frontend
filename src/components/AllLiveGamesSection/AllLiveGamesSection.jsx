@@ -117,7 +117,9 @@ function AllLiveGamesSection({
             </li>
           ))
         ) : (
-          <li>No live games available at the moment.</li>
+          <li className="alllivegamessection__no-games">
+            No live games available at the moment.
+          </li>
         )}
       </ul>
       {visibleGamesCount < liveGames.length && (

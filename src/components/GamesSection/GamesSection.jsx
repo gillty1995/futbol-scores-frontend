@@ -70,6 +70,13 @@ function GamesSection({
   const startDate = formatDateForAPI(today);
   const endDate = formatDateForAPI(twoWeeksFromNow);
 
+  const getSeasonYear = (date) => {
+    const currentMonth = date.getMonth();
+    return currentMonth < 6 ? date.getFullYear() - 1 : date.getFullYear();
+  };
+
+  const seasonYear = getSeasonYear(today);
+
   useEffect(() => {
     const fetchTeamData = async () => {
       setLoading(true);
@@ -106,12 +113,18 @@ function GamesSection({
             },
             params: {
               team: teamId,
-              season: new Date().getFullYear(),
+              // season: new Date().getFullYear(),
+              season: seasonYear,
               from: startDate,
               to: endDate,
             },
           }
         );
+
+        console.log("Games Response:", gamesResponse.data.response);
+        console.log("Games Response Full Data:", gamesResponse.data);
+        console.log("Start Date:", startDate);
+        console.log("End Date:", endDate);
 
         const sortedGames = gamesResponse.data.response.sort((a, b) => {
           return new Date(a.fixture.date) - new Date(b.fixture.date);
