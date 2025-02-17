@@ -19,38 +19,35 @@ function GamesSection({
   const [error, setError] = useState(null);
   const [selectedGame, setSelectedGame] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const { isLoggedIn } = useContext(AuthContext);
-  const { setTeamData } = useContext(AuthContext);
-
-  console.log(currentUser);
+  const { isLoggedIn, setTeamData } = useContext(AuthContext);
 
   const today = new Date();
   const twoWeeksFromNow = new Date(today);
   twoWeeksFromNow.setDate(today.getDate() + 14);
 
-  const formatDateForAPI = (date) => {
-    const dateObj = new Date(date);
-    return dateObj.toISOString().split("T")[0];
-  };
+  const formatDateForAPI = (date) => date.toISOString().split("T")[0];
 
   const formatDate = (date) => {
     const dateObj = new Date(date);
-    if (isNaN(dateObj.getTime())) return "";
-
-    const month = dateObj.getMonth() + 1;
-    const day = dateObj.getDate();
-
-    return `${month.toString().padStart(2, "0")}/${day
-      .toString()
-      .padStart(2, "0")}`;
+    return isNaN(dateObj.getTime())
+      ? ""
+      : dateObj.toLocaleDateString("en-US", {
+          month: "2-digit",
+          day: "2-digit",
+        });
   };
 
   const formatTime = (dateTime) => {
     const dateObj = new Date(dateTime);
-    if (isNaN(dateObj.getTime())) return "";
-
-    const options = { hour: "numeric", minute: "2-digit", hour12: true };
-    return dateObj.toLocaleTimeString([], options).replace(/^0/, "");
+    return isNaN(dateObj.getTime())
+      ? ""
+      : dateObj
+          .toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })
+          .replace(/^0/, "");
   };
 
   const isLive = (dateTime) => {
@@ -63,19 +60,34 @@ function GamesSection({
 
   const isGameOver = (dateTime) => {
     const now = new Date();
-    const gameEnd = new Date(new Date(dateTime).getTime() + 120 * 60 * 1000);
-    return now > gameEnd;
+    return now > new Date(new Date(dateTime).getTime() + 120 * 60 * 1000);
   };
 
-  const startDate = formatDateForAPI(today);
-  const endDate = formatDateForAPI(twoWeeksFromNow);
+  const getCurrentSeason = async () => {
+    try {
+      const response = await axios.get(
+        "https://api-football-v1.p.rapidapi.com/v3/leagues",
+        {
+          headers: {
+            "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+          },
+          params: { team: teamId },
+        }
+      );
 
-  const getSeasonYear = (date) => {
-    const currentMonth = date.getMonth();
-    return currentMonth < 6 ? date.getFullYear() - 1 : date.getFullYear();
+      const activeSeasons = response.data.response
+        .flatMap((league) => league.seasons)
+        .filter((season) => season.current);
+
+      return activeSeasons.length > 0
+        ? activeSeasons[0].year
+        : new Date().getFullYear();
+    } catch (err) {
+      console.error("Error fetching season year:", err);
+      return new Date().getFullYear();
+    }
   };
-
-  const seasonYear = getSeasonYear(today);
 
   useEffect(() => {
     const fetchTeamData = async () => {
@@ -89,20 +101,17 @@ function GamesSection({
               "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
               "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
             },
-            params: {
-              id: teamId,
-            },
+            params: { id: teamId },
           }
         );
-        console.log("Team Response:", teamResponse.data);
-        console.log("Full Team Response:", teamResponse.data);
-        console.log("Team Response Array:", teamResponse.data.response);
+
         const teamData = teamResponse.data.response[0];
-        if (!teamData) {
-          throw new Error("No team data found");
-        }
+        if (!teamData) throw new Error("No team data found");
+
         setTeamName(teamData.team.name);
         setTeamData(teamData);
+
+        const seasonYear = await getCurrentSeason();
 
         const gamesResponse = await axios.get(
           `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
@@ -113,22 +122,16 @@ function GamesSection({
             },
             params: {
               team: teamId,
-              // season: new Date().getFullYear(),
               season: seasonYear,
-              from: startDate,
-              to: endDate,
+              from: formatDateForAPI(today),
+              to: formatDateForAPI(twoWeeksFromNow),
             },
           }
         );
 
-        console.log("Games Response:", gamesResponse.data.response);
-        console.log("Games Response Full Data:", gamesResponse.data);
-        console.log("Start Date:", startDate);
-        console.log("End Date:", endDate);
-
-        const sortedGames = gamesResponse.data.response.sort((a, b) => {
-          return new Date(a.fixture.date) - new Date(b.fixture.date);
-        });
+        const sortedGames = gamesResponse.data.response.sort(
+          (a, b) => new Date(a.fixture.date) - new Date(b.fixture.date)
+        );
         setGames(sortedGames);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -139,12 +142,10 @@ function GamesSection({
     };
 
     fetchTeamData();
-  }, [teamId, startDate, endDate]);
+  }, [teamId]);
 
   const handleCardClick = (game) => {
-    console.log("Game clicked:", game);
     setSelectedGame(game);
-    console.log(selectedGame);
     setModalOpen(true);
   };
 
