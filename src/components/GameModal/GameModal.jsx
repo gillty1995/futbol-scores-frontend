@@ -385,6 +385,8 @@ function GameModal({
                 <span className="gamemodal__event-detail">
                   {event.type === "Goal" &&
                     `⚽ ${event.detail} by ${event.player.name} (${teamName})`}
+                  {event.type === "Var" &&
+                    `⚽ ${event.detail} by ${event.player.name} (${teamName})`}
                   {event.type === "Card" &&
                     `${cardEmoji} ${event.detail} for ${event.player.name} (${teamName})`}
                   {event.type === "subst" &&
