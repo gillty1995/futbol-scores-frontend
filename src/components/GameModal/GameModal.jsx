@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import Preloader from "../Preloader/Preloader";
@@ -21,9 +22,18 @@ function GameModal({
   const [isFormValid, setIsFormValid] = useState(true);
   const [isLiveGame, setIsLiveGame] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isStatsLoading, setIsStatsLoading] = useState(false);
   const [buttonText, setButtonText] = useState("Save Game");
   const [isGameSaved, setIsGameSaved] = useState(false);
+  const [displayTime, setDisplayTime] = useState("");
+  const [isPenalties, setIsPenalties] = useState(false);
+  const [penaltyScore, setPenaltyScore] = useState({ home: 0, away: 0 });
+  const [showLineups, setShowLineups] = useState(false);
+  const [showStandings, setShowStandings] = useState(false);
+  const [lineups, setLineups] = useState(null);
+  const [standings, setStandings] = useState(null);
   const hasScrolled = useRef(false);
+  const navigate = useNavigate();
 
   // check if game saved
   useEffect(() => {
@@ -40,53 +50,193 @@ function GameModal({
     }
   }, [currentUser, game]);
 
-  // fetch live game data
-  const fetchLiveGameData = async () => {
-    if (game) {
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
+  // fetch live game data, optionally showing the spinner
+  const fetchLiveGameData = async (showSpinner = true) => {
+    if (!game) return;
+
+    // only toggle loading when you want the spinner
+    if (showSpinner) setIsLoading(true);
+
+    try {
+      const response = await axios.get(
+        "https://api-football-v1.p.rapidapi.com/v3/fixtures",
+        {
+          headers: {
+            "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+          },
+          params: {
+            id: game.fixture.id,
+          },
+        }
+      );
+
+      const fixtureData = response.data.response[0];
+      if (fixtureData) {
+        const fixtureStatus = fixtureData.fixture.status;
+        setLiveScore(fixtureData);
+        setLiveEvents(fixtureData.events || []);
+        setIsLiveGame(
+          ["In Play", "1H", "2H", "HT", "ET", "P"].includes(fixtureStatus.short)
+        );
+        const p = fixtureData.score.penalty || {};
+        if (p.home != null || p.away != null) {
+          setIsPenalties(true);
+          setPenaltyScore({ home: p.home, away: p.away });
+        } else {
+          setIsPenalties(false);
+        }
+      } else {
+        setIsLiveGame(false);
+        setLiveScore(null);
+        setLiveEvents([]);
+      }
+    } catch (error) {
+      console.error("Error fetching live games:", error);
+    } finally {
+      // only hide spinner if we showed it
+      if (showSpinner) setIsLoading(false);
+    }
+
+    console.log(game.league.name);
+  };
+
+  useEffect(() => {
+    if (!game) return;
+    // show spinner on initial load
+    fetchLiveGameData(true);
+  }, [game]);
+
+  // poll every 30s, but only while the game is actually live
+  useEffect(() => {
+    if (!isLiveGame) return;
+
+    const id = setInterval(() => fetchLiveGameData(false), 30_000);
+    return () => clearInterval(id);
+  }, [isLiveGame]);
+
+  // checking for extra time (and stoppage) or penalties
+  useEffect(() => {
+    if (!liveScore) return;
+    const { short, elapsed, extra } = liveScore.fixture.status;
+    let txt;
+
+    if (isPenalties) {
+      txt = "Penalties";
+    } else if (short === "FT") {
+      txt = "FT";
+    } else if (short === "HT") {
+      txt = "HT";
+    } else if ((short === "2H" || short === "ET") && extra != null) {
+      txt = `90+${extra}'`;
+    } else if (short === "1H" && extra != null) {
+      txt = `45+${extra}'`;
+    } else {
+      txt = `${elapsed}'`;
+    }
+
+    setDisplayTime(txt);
+  }, [liveScore, isPenalties]);
+
+  const fetchStats = async () => {
+    setIsStatsLoading(true);
+    try {
+      const leagueId = liveScore?.league?.id ?? game.league?.id;
+      const season = liveScore?.league?.season ?? game.league?.season;
+
+      if (!leagueId || !season) {
+        console.error("Cannot fetch standings—no league/season yet:", {
+          leagueId,
+          season,
+        });
+        setIsStatsLoading(false);
+        return;
+      }
+      // pull lineup + standings in parallel
+      const [lineupRes, standingRes] = await Promise.all([
+        axios.get(
+          "https://api-football-v1.p.rapidapi.com/v3/fixtures/lineups",
           {
             headers: {
               "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
               "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
             },
-            params: {
-              id: game.fixture.id,
-            },
+            params: { fixture: game.fixture.id },
           }
-        );
+        ),
+        axios.get("https://api-football-v1.p.rapidapi.com/v3/standings", {
+          headers: {
+            "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+          },
+          params: {
+            league: leagueId,
+            season: season,
+          },
+        }),
+      ]);
 
-        const fixtureData = response.data.response[0];
-        if (fixtureData) {
-          const fixtureStatus = fixtureData.fixture.status;
-          setLiveScore(fixtureData);
-          setLiveEvents(fixtureData.events || []);
-          setIsLiveGame(
-            fixtureStatus.short === "In Play" ||
-              fixtureStatus.short === "1H" ||
-              fixtureStatus.short === "2H" ||
-              fixtureStatus.short === "HT" ||
-              fixtureStatus.short === "ET"
-          );
-        } else {
-          setIsLiveGame(false);
-          setLiveScore(null);
-          setLiveEvents([]);
-        }
-      } catch (error) {
-        console.error("Error fetching live games:", error);
-      } finally {
-        setIsLoading(false);
+      // lineups come back as an array of two objects
+      setLineups(lineupRes.data.response);
+
+      const standingArray = standingRes.data.response;
+      if (!Array.isArray(standingArray) || standingArray.length === 0) {
+        console.error("No standings data returned yet for this league/season");
+        setIsStatsLoading(false);
+        return;
       }
-      console.log(game.league.name);
+
+      // pick out the correct sub‐table for this team
+      const allGroups = standingRes.data.response[0].league.standings;
+      // each group is an array of rows; find the one that contains our team
+      const homeId = String(game.teams.home.id);
+      const awayId = String(game.teams.away.id);
+
+      // try to find a group where either homeId or awayId appears
+      let chosenGroup = null;
+      for (const group of allGroups) {
+        if (
+          group.some(
+            (row) =>
+              String(row.team.id) === homeId || String(row.team.id) === awayId
+          )
+        ) {
+          chosenGroup = group;
+          break;
+        }
+      }
+      // if none matched, fall back to the first group
+      if (!chosenGroup) {
+        chosenGroup = allGroups[0];
+      }
+
+      setStandings(chosenGroup);
+    } catch (e) {
+      console.error("Error fetching stats:", e);
+    } finally {
+      setIsStatsLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchLiveGameData();
-  }, [game]);
+  const handleToggleLineups = () => {
+    setShowLineups((prev) => {
+      const opening = !prev;
+      if (opening && !lineups) fetchStats();
+      return opening;
+    });
+    // if standings were showing, hide them
+    if (showStandings) setShowStandings(false);
+  };
+
+  const handleToggleStandings = () => {
+    setShowStandings((prev) => {
+      const opening = !prev;
+      if (opening && !standings) fetchStats();
+      return opening;
+    });
+    // if lineups were showing, hide them
+    if (showLineups) setShowLineups(false);
+  };
 
   // smooth scroll effect
   const startSmoothScroll = (speedMultiplier = 1) => {
@@ -128,11 +278,6 @@ function GameModal({
   // restart smooth scroll effect
   const handleLiveEventsClick = () => {
     startSmoothScroll(2);
-  };
-
-  // handle refresh game
-  const handleRefresh = () => {
-    fetchLiveGameData();
   };
 
   // current user game data
@@ -229,9 +374,6 @@ function GameModal({
                 ? game.teams.home.name
                 : game.teams.away.name;
 
-            console.log("Event team:", event.team);
-            console.log("Game teams:", game.teams);
-
             // determine yellow or red card emoji
             const cardEmoji = event.detail === "Yellow Card" ? "🟨" : "🟥";
 
@@ -281,23 +423,110 @@ function GameModal({
             Date: {formatDate(game.fixture.date)}{" "}
             {formatTime(game.fixture.date)}
           </p>
+
+          {showLineups ? (
+            <div className="gamemodal__stats">
+              <h4 className="gamemodal__stats-title">Starting XI</h4>
+              <div
+                className="gamemodal__stats-container"
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+              >
+                {isStatsLoading ? (
+                  <Preloader />
+                ) : lineups && lineups.length > 0 ? (
+                  lineups.map((team) => (
+                    <div key={team.team.id}>
+                      <h5 className="gamemodal__stats-teams">
+                        {team.team.name}
+                      </h5>
+                      <ul className="gamemodal__stats-players">
+                        {team.startXI.map((p) => (
+                          <li
+                            className="gamemodal__stats-players_data"
+                            key={p.player.id}
+                          >
+                            <span>#{p.player.number}</span>
+                            <span className="gamemodal__player-connector" />{" "}
+                            {p.player.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                ) : (
+                  <p className="gamemodal__no-data">
+                    Starting XI data not available.
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : showStandings ? (
+            <div className="gamemodal__stats">
+              <h4 className="gamemodal__standings-title">League Standings</h4>
+              {isStatsLoading ? (
+                <Preloader />
+              ) : standings ? (
+                <div
+                  className="gamemodal__standings-container"
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                >
+                  <table className="gamemodal__standings-stats">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Team</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>GD</th>
+                        <th>Pt</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {standings.map((row) => (
+                        <tr
+                          key={row.team.id}
+                          onClick={() => navigate(`/team/${row.team.id}`)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <td>{row.rank}</td>
+                          <td className="team-name">{row.team.name}</td>
+                          <td>{row.all.played}</td>
+                          <td>{row.all.win}</td>
+                          <td>{row.all.draw}</td>
+                          <td>{row.all.lose}</td>
+                          <td>{row.goalsDiff}</td>
+                          <td>{row.points}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="gamemodal__no-data">League data not available.</p>
+              )}
+            </div>
+          ) : null}
         </div>
       );
     }
 
     if (liveScore) {
       const homeScore =
-        liveScore?.goals?.home !== undefined ? liveScore.goals.home : "N/A";
+        liveScore.goals?.home != null ? liveScore.goals.home : "N/A";
       const awayScore =
-        liveScore?.goals?.away !== undefined ? liveScore.goals.away : "N/A";
-      const gameElapsedTime = liveScore.fixture?.status?.elapsed ?? 0;
-      const gameStatus = liveScore.fixture?.status?.short ?? "";
+        liveScore.goals?.away != null ? liveScore.goals.away : "N/A";
+      const gameStatus = liveScore.fixture.status.short || "";
 
       return (
         <div className="gamemodal">
           <h3 className="gamemodal__teams">
             {game.teams.home.name} vs {game.teams.away.name}
           </h3>
+
           <div className="gamemodal__live-section">
             <p className="gamemodal__live-section-text">
               {isLiveGame ? (
@@ -317,33 +546,128 @@ function GameModal({
               )}
             </p>
             <p className="gamemodal__time">
-              {isLiveGame ? `${gameElapsedTime}'` : gameStatus}
+              {isLiveGame ? displayTime : gameStatus}
             </p>
           </div>
+
           <p className="gamemodal__score">
             {homeScore} - {awayScore}
           </p>
 
-          {/* Live events section */}
-          <div className="gamemodal__updates">
-            <h4 className="gamemodal__updates-header">Live Updates</h4>
-            {renderLiveEvents()}
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <h3 className="gamemodal__teams">
-            {game.teams.home.name} vs {game.teams.away.name}
-          </h3>
-          <p className="gamemodal__date">
-            Date: {formatDate(game.fixture.date)}{" "}
-            {formatTime(game.fixture.date)}
-          </p>
+          {isPenalties && (
+            <p className="gamemodal__penalty-score">
+              ({penaltyScore.home}) – ({penaltyScore.away})
+            </p>
+          )}
+
+          {showLineups ? (
+            <div className="gamemodal__stats">
+              <h4 className="gamemodal__stats-title">Starting XI</h4>
+              <div
+                className="gamemodal__stats-container"
+                onTouchStart={(e) => e.stopPropagation()}
+                onTouchMove={(e) => e.stopPropagation()}
+              >
+                {isStatsLoading ? (
+                  <Preloader />
+                ) : lineups && lineups.length > 0 ? (
+                  lineups.map((team) => (
+                    <div key={team.team.id}>
+                      <h5 className="gamemodal__stats-teams">
+                        {team.team.name}
+                      </h5>
+                      <ul className="gamemodal__stats-players">
+                        {team.startXI.map((p) => (
+                          <li
+                            className="gamemodal__stats-players_data"
+                            key={p.player.id}
+                          >
+                            {" "}
+                            <span>#{p.player.number}</span>
+                            <span className="gamemodal__player-connector"></span>{" "}
+                            {p.player.name}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))
+                ) : (
+                  <p className="gamemodal__no-data">
+                    Starting XI data not available.
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : showStandings ? (
+            <div className="gamemodal__stats">
+              <h4 className="gamemodal__standings-title">League Standings</h4>
+
+              {isStatsLoading ? (
+                <Preloader />
+              ) : standings ? (
+                <div
+                  className="gamemodal__standings-container"
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                >
+                  <table className="gamemodal__standings-stats">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Team</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>GD</th>
+                        <th>Pt</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {standings.map((row) => (
+                        <tr
+                          key={row.team.id}
+                          onClick={() => navigate(`/team/${row.team.id}`)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <td>{row.rank}</td>
+                          <td className="team-name">{row.team.name}</td>
+                          <td>{row.all.played}</td>
+                          <td>{row.all.win}</td>
+                          <td>{row.all.draw}</td>
+                          <td>{row.all.lose}</td>
+                          <td>{row.goalsDiff}</td>
+                          <td>{row.points}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="gamemodal__no-data">League data not available.</p>
+              )}
+            </div>
+          ) : (
+            <div className="gamemodal__updates">
+              <h4 className="gamemodal__updates-header">Live Updates</h4>
+              {renderLiveEvents()}
+            </div>
+          )}
         </div>
       );
     }
+
+    // fallback if there's no liveScore and it's not upcoming
+    return (
+      <div className="gamemodal">
+        <h3 className="gamemodal__teams">
+          {game.teams.home.name} vs {game.teams.away.name}
+        </h3>
+        <p className="gamemodal__date">
+          Date: {formatDate(game.fixture.date)} {formatTime(game.fixture.date)}
+        </p>
+      </div>
+    );
   };
   console.log("Game object in Modal:", game);
 
@@ -364,10 +688,13 @@ function GameModal({
       isFormValid={isFormValid}
       isLoading={isLoading}
       extraAction={
-        <div className="modal__alternate-action">
-          <p className="modal__or">or</p>
-          <button className="modal__link" onClick={handleRefresh}>
-            Refresh
+        <div className="gamemodal__alternate-action">
+          <button className="gamemodal__link" onClick={handleToggleLineups}>
+            {showLineups ? "Hide Stats" : "Show Stats"}
+          </button>
+          <span className="gamemodal__or">or</span>
+          <button className="gamemodal__link" onClick={handleToggleStandings}>
+            {showStandings ? "Hide Standings" : "League Standing"}
           </button>
         </div>
       }

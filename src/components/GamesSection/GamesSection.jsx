@@ -90,8 +90,8 @@ function GamesSection({
   };
 
   useEffect(() => {
-    const fetchTeamData = async () => {
-      setLoading(true);
+    const fetchTeamData = async (showLoader = false) => {
+      if (showLoader) setLoading(true);
       setError(null);
       try {
         const teamResponse = await axios.get(
@@ -141,7 +141,10 @@ function GamesSection({
       }
     };
 
-    fetchTeamData();
+    fetchTeamData(true);
+
+    const intervalId = setInterval(() => fetchTeamData(false), 60_000);
+    return () => clearInterval(intervalId);
   }, [teamId]);
 
   const handleCardClick = (game) => {
@@ -174,22 +177,17 @@ function GamesSection({
               onClick={() => handleCardClick(game)}
             >
               <div className="gamessection__teams-date">
-                <span
-                  className={`gamessection__date ${
-                    isLive(game.fixture.date) ? "gamessection__live" : ""
-                  }`}
-                >
-                  {isLive(game.fixture.date) ? (
-                    "LIVE"
-                  ) : isGameOver(game.fixture.date) ? (
+                <span className="gamessection__date">
+                  {game.fixture.status.short === "FT" ? (
                     <>
-                      {formatDate(game.fixture.date)}{" "}
                       <span className="gamessection__final">FINAL</span>
                     </>
-                  ) : (
+                  ) : game.fixture.status.short === "NS" ? (
                     `${formatDate(game.fixture.date)} ${formatTime(
                       game.fixture.date
                     )}`
+                  ) : (
+                    <span className="gamessection__live">LIVE</span>
                   )}
                 </span>
               </div>

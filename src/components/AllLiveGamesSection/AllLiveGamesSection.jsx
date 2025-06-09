@@ -20,6 +20,8 @@ function AllLiveGamesSection({
   const [visibleGamesCount, setVisibleGamesCount] = useState(10);
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchLiveGames = async () => {
       setLoading(true);
       setError(null);
@@ -36,19 +38,31 @@ function AllLiveGamesSection({
             },
           }
         );
+        if (!isMounted) return;
         if (response.data && response.data.response) {
           setLiveGames(response.data.response);
         } else {
           setLiveGames([]);
         }
       } catch (err) {
+        if (!isMounted) return;
         setError(err);
       } finally {
+        if (!isMounted) return;
         setLoading(false);
       }
     };
 
+    // initial fetch:
     fetchLiveGames();
+
+    // re‐fetch every 30 seconds:
+    const intervalId = setInterval(fetchLiveGames, 120_000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
   }, []);
 
   const handleCardClick = (game) => {
@@ -90,32 +104,42 @@ function AllLiveGamesSection({
       <h2 className="alllivegamessection__header">Current Live Games</h2>
       <ul className="alllivegamessection__card-list">
         {liveGames.length > 0 ? (
-          liveGames.slice(0, visibleGamesCount).map((game) => (
-            <li
-              key={game.fixture.id}
-              className="alllivegamessection__card"
-              onClick={() => handleCardClick(game)}
-            >
-              <div className="alllivegamessection__teams-date">
-                <span className="alllivegamessection__live">LIVE</span>
-              </div>
-              <div className="alllivegamessection__teams">
-                <div className="alllivegamessection__team">
-                  {renderTeamLogo(game.teams.home)}
-                  <span className="alllivegamessection__teams-name">
-                    {game.teams.home.name}
-                  </span>
+          liveGames.slice(0, visibleGamesCount).map((game) => {
+            // compute this game’s “isFinished” flag here, not outside
+            const statusShort = game.fixture.status.short; // e.g. "1H", "2H", "HT", "ET", "FT"
+            const isFinished = statusShort === "FT";
+
+            return (
+              <li
+                key={game.fixture.id}
+                className="alllivegamessection__card"
+                onClick={() => handleCardClick(game)}
+              >
+                <div className="alllivegamessection__teams-date">
+                  {isFinished ? (
+                    <span className="alllivegamessection__final">FINAL</span>
+                  ) : (
+                    <span className="alllivegamessection__live">LIVE</span>
+                  )}
                 </div>
-                <span className="alllivegamessection__vs">vs</span>
-                <div className="alllivegamessection__team">
-                  {renderTeamLogo(game.teams.away)}
-                  <span className="alllivegamessection__teams-name">
-                    {game.teams.away.name}
-                  </span>
+                <div className="alllivegamessection__teams">
+                  <div className="alllivegamessection__team">
+                    {renderTeamLogo(game.teams.home)}
+                    <span className="alllivegamessection__teams-name">
+                      {game.teams.home.name}
+                    </span>
+                  </div>
+                  <span className="alllivegamessection__vs">vs</span>
+                  <div className="alllivegamessection__team">
+                    {renderTeamLogo(game.teams.away)}
+                    <span className="alllivegamessection__teams-name">
+                      {game.teams.away.name}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))
+              </li>
+            );
+          })
         ) : (
           <li className="alllivegamessection__no-games">
             No live games available at the moment.
