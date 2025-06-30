@@ -50,6 +50,23 @@ function GameModal({
     }
   }, [currentUser, game]);
 
+  // check if game is delayed
+  const [, forceUpdate] = useState(0);
+
+  useEffect(() => {
+    if (!game) return;
+    const kickOffMs = new Date(game.fixture.date).getTime();
+    const msUntilDelay = kickOffMs + 15 * 60_000 - Date.now();
+
+    if (msUntilDelay > 0) {
+      const timer = setTimeout(() => {
+        forceUpdate((n) => n + 1);
+        fetchLiveGameData(false);
+      }, msUntilDelay);
+      return () => clearTimeout(timer);
+    }
+  }, [game?.fixture?.date]);
+
   // fetch live game data, optionally showing the spinner
   const fetchLiveGameData = async (showSpinner = true) => {
     if (!game) return;
@@ -72,6 +89,7 @@ function GameModal({
       );
 
       const fixtureData = response.data.response[0];
+      console.log("🔴 fixtureData coming back from API:", fixtureData);
       if (fixtureData) {
         const fixtureStatus = fixtureData.fixture.status;
         setLiveScore(fixtureData);
@@ -518,10 +536,13 @@ function GameModal({
 
     if (liveScore) {
       const homeScore =
-        liveScore.goals?.home != null ? liveScore.goals.home : "N/A";
+        liveScore.goals?.home != null ? liveScore.goals.home : "0";
       const awayScore =
-        liveScore.goals?.away != null ? liveScore.goals.away : "N/A";
+        liveScore.goals?.away != null ? liveScore.goals.away : "0";
       const gameStatus = liveScore.fixture.status.short || "";
+      const kickOffDate = new Date(game.fixture.date);
+      const minutesSinceKickoff = (Date.now() - kickOffDate.getTime()) / 60000;
+      const isDelayed = gameStatus === "NS" && minutesSinceKickoff > 15;
 
       return (
         <div className="gamemodal">
@@ -540,15 +561,27 @@ function GameModal({
                   <span className="gamemodal__extra-time-text">
                     LIVE - EXTRA TIME
                   </span>
+                ) : gameStatus === "BT" ? (
+                  <span className="gamemodal__extra-time-text">
+                    LIVE - BREAK
+                  </span>
                 ) : (
                   <span className="gamemodal__live-text">LIVE</span>
                 )
+              ) : isDelayed ? (
+                <span className="gamemodal__live-text-final">
+                  LIVE DATA UNAVAILABLE
+                </span>
+              ) : gameStatus === "NS" ? (
+                <span className="gamemodal__live-text-final">NOT STARTED</span>
+              ) : gameStatus === "INT" ? (
+                <span className="gamemodal__live-text">Match Interrupted</span>
               ) : (
                 <span className="gamemodal__live-text-final">FINAL</span>
               )}
             </p>
             <p className="gamemodal__time">
-              {isLiveGame ? displayTime : gameStatus}
+              {isLiveGame ? displayTime : isDelayed ? "" : gameStatus}
             </p>
           </div>
 

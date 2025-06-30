@@ -72,7 +72,7 @@ function GamesSection({
             "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
             "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
           },
-          params: { team: teamId },
+          params: { team: teamId, status: "NS" },
         }
       );
 

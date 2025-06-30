@@ -67,6 +67,17 @@ function Header({
         >
           Live Now
         </NavLink>
+        <NavLink
+          to="/upcoming"
+          onClick={closeMenu}
+          className={({ isActive }) =>
+            isActive
+              ? "header__link header__link_active header__link_type_mobile"
+              : "header__link header__link_type_mobile"
+          }
+        >
+          Upcoming Games
+        </NavLink>
         {isLoggedIn ? (
           <>
             <NavLink

@@ -20,6 +20,7 @@ import RegisterModal from "../RegisterModal/RegisterModal";
 import ContactModal from "../ContactModal/ContactModal";
 import GamesSection from "../GamesSection/GamesSection";
 import AllLiveGamesSection from "../AllLiveGamesSection/AllLiveGamesSection";
+import UpcomingGamesSection from "../UpcomingGamesSection/UpcomingGamesSection";
 
 import "./App.css";
 
@@ -230,6 +231,16 @@ function App() {
               path="/live"
               element={
                 <AllLiveGamesSection
+                  openLoginModal={openLoginModal}
+                  currentUser={currentUser}
+                  setCurrentUser={setCurrentUser}
+                />
+              }
+            />
+            <Route
+              path="/upcoming"
+              element={
+                <UpcomingGamesSection
                   openLoginModal={openLoginModal}
                   currentUser={currentUser}
                   setCurrentUser={setCurrentUser}
