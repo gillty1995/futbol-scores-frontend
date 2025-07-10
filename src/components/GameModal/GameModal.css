@@ -5,6 +5,16 @@
   line-height: 28px;
   display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.gamemodal__team-title {
+  margin: 5px;
+  text-decoration: none;
+  color: black;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .gamemodal__date {
@@ -365,4 +375,30 @@
   line-height: 1;
   margin: 0;
   padding: 0;
+}
+
+@media (max-width: 600px) {
+  .gamemodal__teams {
+    font-family: "Roboto", "Arial", sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 28px;
+    gap: 0.5rem;
+    margin: 5px;
+  }
+
+  .gamemodal__team-title {
+    max-width: 75px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 2px;
+    display: inline-block;
+  }
+}
+
+@media (max-width: 400px) {
+  .gamemodal__title {
+    font-size: 18px;
+  }
 }

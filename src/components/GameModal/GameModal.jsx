@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ModalWithForm from "../ModalWithForm/ModalWithForm";
 import Preloader from "../Preloader/Preloader";
@@ -160,7 +160,7 @@ function GameModal({
     setIsStatsLoading(true);
     try {
       const leagueId = liveScore?.league?.id ?? game.league?.id;
-      const season = liveScore?.league?.season ?? game.league?.season;
+      const season = await fetchCurrentSeasonForLeague(leagueId);
 
       if (!leagueId || !season) {
         console.error("Cannot fetch standings—no league/season yet:", {
@@ -437,7 +437,22 @@ function GameModal({
       return (
         <div className="gamemodal">
           <h3 className="gamemodal__teams">
-            {game.teams.home.name} vs {game.teams.away.name}
+            <Link
+              to={`/team/${game.teams.home.id}`}
+              style={{ cursor: "pointer" }}
+              className="gamemodal__team-title"
+            >
+              {game.teams.home.name}
+            </Link>{" "}
+            vs
+            <Link
+              to={`/team/${game.teams.away.id}`}
+              style={{ cursor: "pointer" }}
+              className="gamemodal__team-title"
+            >
+              {game.teams.away.name}
+            </Link>
+            {/* {game.teams.home.name} vs {game.teams.away.name} */}
           </h3>
           <p className="gamemodal__date">
             Date: {formatDate(game.fixture.date)}{" "}
@@ -547,7 +562,22 @@ function GameModal({
       return (
         <div className="gamemodal">
           <h3 className="gamemodal__teams">
-            {game.teams.home.name} vs {game.teams.away.name}
+            <Link
+              to={`/team/${game.teams.home.id}`}
+              style={{ cursor: "pointer" }}
+              className="gamemodal__team-title"
+            >
+              {game.teams.home.name}
+            </Link>{" "}
+            vs
+            <Link
+              to={`/team/${game.teams.away.id}`}
+              style={{ cursor: "pointer" }}
+              className="gamemodal__team-title"
+            >
+              {game.teams.away.name}
+            </Link>
+            {/* {game.teams.home.name} vs {game.teams.away.name} */}
           </h3>
 
           <div className="gamemodal__live-section">
@@ -711,9 +741,14 @@ function GameModal({
       title={
         <div className="gamemodal__title">
           Game Details
-          {game.league && game.league.name && (
-            <span className="gamemodal__league"> {game.league.name}</span>
-          )}
+          <span className="gamemodal__league">
+            {liveScore?.league?.name || game.league?.name}
+            {liveScore?.league?.country
+              ? ` (${liveScore.league.country})`
+              : game.league?.country
+              ? ` (${game.league.country})`
+              : ""}
+          </span>
         </div>
       }
       isOpen={!!game}
@@ -758,6 +793,50 @@ const formatTime = (dateTime) => {
 
   const options = { hour: "numeric", minute: "2-digit", hour12: true };
   return dateObj.toLocaleTimeString([], options).replace(/^0/, "");
+};
+
+// fetch current season for a given league
+const fetchCurrentSeasonForLeague = async (leagueId) => {
+  try {
+    const response = await axios.get(
+      "https://api-football-v1.p.rapidapi.com/v3/leagues",
+      {
+        headers: {
+          "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+          "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+        },
+        params: {
+          id: leagueId,
+          current: "true",
+        },
+      }
+    );
+    const seasons = response.data.response[0]?.seasons || [];
+    let currentSeason = seasons.find((s) => s.current);
+
+    // If the current season is not this year and it's July or later, try to use this year
+    const now = new Date();
+    const thisYear = now.getFullYear();
+    if (
+      (!currentSeason || currentSeason.year < thisYear) &&
+      now.getMonth() >= 6 // July or later
+    ) {
+      // Try to find this year in seasons
+      const thisYearSeason = seasons.find((s) => s.year === thisYear);
+      if (thisYearSeason) currentSeason = thisYearSeason;
+    }
+
+    console.log(
+      "Current season for league",
+      leagueId,
+      ":",
+      currentSeason?.year
+    );
+    return currentSeason?.year;
+  } catch (err) {
+    console.error("Error fetching current season for league:", err);
+    return new Date().getFullYear(); // fallback
+  }
 };
 
 export default GameModal;

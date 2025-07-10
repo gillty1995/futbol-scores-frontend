@@ -178,17 +178,24 @@ function GamesSection({
             >
               <div className="gamessection__teams-date">
                 <span className="gamessection__date">
-                  {game.fixture.status.short === "FT" ? (
-                    <>
-                      <span className="gamessection__final">FINAL</span>
-                    </>
-                  ) : game.fixture.status.short === "NS" ? (
-                    `${formatDate(game.fixture.date)} ${formatTime(
-                      game.fixture.date
-                    )}`
-                  ) : (
-                    <span className="gamessection__live">LIVE</span>
-                  )}
+                  {(() => {
+                    const short = game.fixture.status.short;
+                    const LIVE_STATUSES = ["1H", "2H", "HT", "ET", "P", "LIVE"];
+                    if (short === "FT") {
+                      return <span className="gamessection__final">FINAL</span>;
+                    } else if (short === "NS") {
+                      return `${formatDate(game.fixture.date)} ${formatTime(
+                        game.fixture.date
+                      )}`;
+                    } else if (LIVE_STATUSES.includes(short)) {
+                      return <span className="gamessection__live">LIVE</span>;
+                    } else {
+                      // fallback for other statuses
+                      return `${formatDate(game.fixture.date)} ${formatTime(
+                        game.fixture.date
+                      )}`;
+                    }
+                  })()}
                 </span>
               </div>
               <div className="gamessection__teams">
