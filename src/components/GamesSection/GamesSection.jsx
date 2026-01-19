@@ -72,7 +72,8 @@ function GamesSection({
             "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
             "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
           },
-          params: { team: teamId, status: "NS" },
+          // removed status:"NS" — just ask for leagues for the team
+          params: { team: teamId },
         }
       );
 
@@ -113,7 +114,7 @@ function GamesSection({
 
         const seasonYear = await getCurrentSeason();
 
-        const gamesResponse = await axios.get(
+        let gamesResponse = await axios.get(
           `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
           {
             headers: {
@@ -128,6 +129,26 @@ function GamesSection({
             },
           }
         );
+
+        if (
+          !Array.isArray(gamesResponse.data.response) ||
+          gamesResponse.data.response.length === 0
+        ) {
+          gamesResponse = await axios.get(
+            `https://api-football-v1.p.rapidapi.com/v3/fixtures`,
+            {
+              headers: {
+                "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
+                "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+              },
+              params: {
+                team: teamId,
+                from: formatDateForAPI(today),
+                to: formatDateForAPI(twoWeeksFromNow),
+              },
+            }
+          );
+        }
 
         const sortedGames = gamesResponse.data.response.sort(
           (a, b) => new Date(a.fixture.date) - new Date(b.fixture.date)

@@ -35,22 +35,19 @@ function GameModal({
   const hasScrolled = useRef(false);
   const navigate = useNavigate();
 
-  // check if game saved
   useEffect(() => {
     if (currentUser && game) {
       const isSaved = currentUser.savedGames.some(
         (savedGame) => String(savedGame.fixtureId) === String(game.fixture.id)
       );
-
-      console.log("Is game saved?", isSaved);
       setIsGameSaved(isSaved);
       setButtonText(isSaved ? "Game Saved" : "Save Game");
     } else {
-      console.log("Current user or game is not defined.");
+      setIsGameSaved(false);
+      setButtonText("Save Game");
     }
   }, [currentUser, game]);
 
-  // check if game is delayed
   const [, forceUpdate] = useState(0);
 
   useEffect(() => {
@@ -67,11 +64,9 @@ function GameModal({
     }
   }, [game?.fixture?.date]);
 
-  // fetch live game data, optionally showing the spinner
   const fetchLiveGameData = async (showSpinner = true) => {
     if (!game) return;
 
-    // only toggle loading when you want the spinner
     if (showSpinner) setIsLoading(true);
 
     try {
@@ -89,7 +84,6 @@ function GameModal({
       );
 
       const fixtureData = response.data.response[0];
-      console.log("🔴 fixtureData coming back from API:", fixtureData);
       if (fixtureData) {
         const fixtureStatus = fixtureData.fixture.status;
         setLiveScore(fixtureData);
@@ -112,20 +106,15 @@ function GameModal({
     } catch (error) {
       console.error("Error fetching live games:", error);
     } finally {
-      // only hide spinner if we showed it
       if (showSpinner) setIsLoading(false);
     }
-
-    console.log(game.league.name);
   };
 
   useEffect(() => {
     if (!game) return;
-    // show spinner on initial load
     fetchLiveGameData(true);
   }, [game]);
 
-  // poll every 30s, but only while the game is actually live
   useEffect(() => {
     if (!isLiveGame) return;
 
@@ -133,7 +122,6 @@ function GameModal({
     return () => clearInterval(id);
   }, [isLiveGame]);
 
-  // checking for extra time (and stoppage) or penalties
   useEffect(() => {
     if (!liveScore) return;
     const { short, elapsed, extra } = liveScore.fixture.status;
@@ -170,7 +158,6 @@ function GameModal({
         setIsStatsLoading(false);
         return;
       }
-      // pull lineup + standings in parallel
       const [lineupRes, standingRes] = await Promise.all([
         axios.get(
           "https://api-football-v1.p.rapidapi.com/v3/fixtures/lineups",
@@ -194,7 +181,6 @@ function GameModal({
         }),
       ]);
 
-      // lineups come back as an array of two objects
       setLineups(lineupRes.data.response);
 
       const standingArray = standingRes.data.response;
@@ -204,13 +190,10 @@ function GameModal({
         return;
       }
 
-      // pick out the correct sub‐table for this team
       const allGroups = standingRes.data.response[0].league.standings;
-      // each group is an array of rows; find the one that contains our team
       const homeId = String(game.teams.home.id);
       const awayId = String(game.teams.away.id);
 
-      // try to find a group where either homeId or awayId appears
       let chosenGroup = null;
       for (const group of allGroups) {
         if (
@@ -223,7 +206,6 @@ function GameModal({
           break;
         }
       }
-      // if none matched, fall back to the first group
       if (!chosenGroup) {
         chosenGroup = allGroups[0];
       }
@@ -242,7 +224,6 @@ function GameModal({
       if (opening && !lineups) fetchStats();
       return opening;
     });
-    // if standings were showing, hide them
     if (showStandings) setShowStandings(false);
   };
 
@@ -252,11 +233,9 @@ function GameModal({
       if (opening && !standings) fetchStats();
       return opening;
     });
-    // if lineups were showing, hide them
     if (showLineups) setShowLineups(false);
   };
 
-  // smooth scroll effect
   const startSmoothScroll = (speedMultiplier = 1) => {
     if (updatesRef.current) {
       const updatesList = updatesRef.current;
@@ -285,7 +264,6 @@ function GameModal({
     }
   };
 
-  // initial smooth scroll on mount
   useEffect(() => {
     if (!hasScrolled.current) {
       hasScrolled.current = true;
@@ -293,19 +271,16 @@ function GameModal({
     }
   }, [liveEvents]);
 
-  // restart smooth scroll effect
   const handleLiveEventsClick = () => {
     startSmoothScroll(2);
   };
 
-  // current user game data
   useEffect(() => {
     if (currentUser) {
       const data = gameData(game, currentUser);
     }
   }, [currentUser, game]);
 
-  // handle save game
   const handleSaveGame = async (e) => {
     e.preventDefault();
 
@@ -327,15 +302,12 @@ function GameModal({
       }
 
       if (isGameSaved) {
-        console.log("Unsaving the game:", fixtureId);
         await unsaveGame(fixtureId);
 
         setCurrentUser((prevUser) => {
           const updatedSavedGames = prevUser.savedGames.filter(
             (savedGame) => savedGame.fixtureId !== fixtureId
           );
-
-          console.log("Updated saved games after unsaving:", updatedSavedGames);
 
           return {
             ...prevUser,
@@ -346,7 +318,6 @@ function GameModal({
         setButtonText("Save Game");
         setIsGameSaved(false);
       } else {
-        console.log("Saving the game:", formattedGameData);
         await saveGame(formattedGameData);
 
         setCurrentUser((prevUser) => {
@@ -371,7 +342,6 @@ function GameModal({
     }
   };
 
-  // live events
   const renderLiveEvents = () => {
     if (!liveEvents.length) {
       return <p className="gamemodal__no-updates">No updates yet...</p>;
@@ -392,7 +362,6 @@ function GameModal({
                 ? game.teams.home.name
                 : game.teams.away.name;
 
-            // determine yellow or red card emoji
             const cardEmoji = event.detail === "Yellow Card" ? "🟨" : "🟥";
 
             return (
@@ -423,7 +392,6 @@ function GameModal({
     );
   };
 
-  // game content
   const renderContent = () => {
     if (isLoading) {
       return <Preloader className="gamemodal__preloader" />;
@@ -452,7 +420,6 @@ function GameModal({
             >
               {game.teams.away.name}
             </Link>
-            {/* {game.teams.home.name} vs {game.teams.away.name} */}
           </h3>
           <p className="gamemodal__date">
             Date: {formatDate(game.fixture.date)}{" "}
@@ -577,7 +544,6 @@ function GameModal({
             >
               {game.teams.away.name}
             </Link>
-            {/* {game.teams.home.name} vs {game.teams.away.name} */}
           </h3>
 
           <div className="gamemodal__live-section">
@@ -722,7 +688,6 @@ function GameModal({
       );
     }
 
-    // fallback if there's no liveScore and it's not upcoming
     return (
       <div className="gamemodal">
         <h3 className="gamemodal__teams">
@@ -734,7 +699,6 @@ function GameModal({
       </div>
     );
   };
-  console.log("Game object in Modal:", game);
 
   return (
     <ModalWithForm
@@ -774,7 +738,6 @@ function GameModal({
   );
 }
 
-// format date and time
 const formatDate = (date) => {
   const dateObj = new Date(date);
   if (isNaN(dateObj.getTime())) return "";
@@ -795,7 +758,6 @@ const formatTime = (dateTime) => {
   return dateObj.toLocaleTimeString([], options).replace(/^0/, "");
 };
 
-// fetch current season for a given league
 const fetchCurrentSeasonForLeague = async (leagueId) => {
   try {
     const response = await axios.get(
@@ -814,28 +776,20 @@ const fetchCurrentSeasonForLeague = async (leagueId) => {
     const seasons = response.data.response[0]?.seasons || [];
     let currentSeason = seasons.find((s) => s.current);
 
-    // If the current season is not this year and it's July or later, try to use this year
     const now = new Date();
     const thisYear = now.getFullYear();
     if (
       (!currentSeason || currentSeason.year < thisYear) &&
-      now.getMonth() >= 6 // July or later
+      now.getMonth() >= 6
     ) {
-      // Try to find this year in seasons
       const thisYearSeason = seasons.find((s) => s.year === thisYear);
       if (thisYearSeason) currentSeason = thisYearSeason;
     }
 
-    console.log(
-      "Current season for league",
-      leagueId,
-      ":",
-      currentSeason?.year
-    );
     return currentSeason?.year;
   } catch (err) {
     console.error("Error fetching current season for league:", err);
-    return new Date().getFullYear(); // fallback
+    return new Date().getFullYear();
   }
 };
 
